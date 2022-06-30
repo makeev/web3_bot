@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>Sanic-skeleton</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/static/bootstrap.min.css"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <link href="/static/main.css" rel="stylesheet">
+
+    <meta name="theme-color" content="#7952b3">
+
+    <!-- Custom styles for this template -->
+    <script src="https://kit.fontawesome.com/cdf31b25bc.js" crossorigin="anonymous"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.5.1.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+            crossorigin="anonymous"></script>
+
+    <script src="/static/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/static/scripts/jquery.ba-throttle-debounce.js"></script>
+    <script src="/static/scripts/main.js"></script>
+
+</head>
+<body>
+
+<div class="spinner-border spinner-border text-danger" role="status" id="loading-indicator" style="display: none">
+  <span class="visually-hidden">Loading...</span>
+</div>
+
+<div class="alert alert-success" role="alert" id="alert">
+    <span class="message"></span>
+</div>
+
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="{{ url_for("admin.home") }}">HOME</a>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+        {% if not hide_menu %}
+            <nav id="sidebarMenu" class="col-2 col-lg-2 col-sm-3 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url_for("admin.home") }}">
+                                <span class="fas fa-chart-line"></span>
+                                /
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ url_for("admin.user_list") }}">
+                                <span class="fas fa-users"></span>
+                                Users
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        {% endif %}
+
+        <main class="col-10 col-sm-9 px-md-4">
+            {% block main %}
+            {% endblock %}
+        </main>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+        crossorigin="anonymous"></script>
+<script>
+    $(document).ajaxSend(function (event, request, settings) {
+        $('#loading-indicator').show();
+    });
+
+    $(document).ajaxComplete(function (event, request, settings) {
+        $('#loading-indicator').hide();
+    });
+</script>
+</body>
+</html>

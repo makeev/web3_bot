@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Service</h1>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+            <b>Table:</b>
+            <input type="text" name="table_name" />
+            <input type="submit" name="action" value="truncate_table">
+            <input type="submit" name="action" value="drop_table">
+            <br><br>
+        </form>
+
+        <br>
+    </div>
+
+<pre>
+Servet time: {{ current_tz_time }}
+DEBUG: {{ DEBUG }}
+Sanic version: {{ sanic_version }}
+ip: {{ request.ip }}
+remote_addr: {{ request.remote_addr }}
+forwarded: {{ request.forwarded }}
+headers: <pre>{{ headers }}</pre>
+get_real_ip: {{  get_real_ip }}
+</pre>
+</div>
+
+
+<script>
+$(document).ready(function() {
+    console.log('test');
+});
+</script>
+
+{% endblock %}

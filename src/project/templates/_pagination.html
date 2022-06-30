@@ -1,0 +1,18 @@
+{% if pages|length > 1 %}
+<nav aria-label="...">
+    <ul class="pagination">
+        {% for p in pages %}
+            {% if p == page and (p < 11 or p > pages|length-10 ) %}
+                <li class="page-item active">
+                    <a class="page-link" href="?page={{ p }}">{{ p }} <span class="sr-only">(current)</span></a>
+                </li>
+            {% elif p == 11 %}
+                <li class="page-item"><a class="page-link">...</a></li>
+            {% elif p > 11 and p < pages|length-10 %}
+            {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}

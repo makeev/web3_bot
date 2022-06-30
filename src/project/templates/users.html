@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Users</h1>
+    <a href="{{ url_for("admin.user_add") }}" class="btn btn-primary">+</a>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped">
+            {% for obj in objects %}
+            <tr>
+                <td><a href="{{ url_for("admin.user_details", id=obj.id) }}">{{ obj.email }}</a></td>
+                <td>{{ obj.name }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+});
+</script>
+
+{% endblock %}
