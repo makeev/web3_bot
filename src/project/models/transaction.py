@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from umongo import Document, fields
 
 from app import get_app
@@ -26,3 +28,7 @@ class Transaction(Document):
     v = fields.IntField()
     r = fields.StrField()
     s = fields.StrField()
+
+    @property
+    def value_decimal(self):
+        return Decimal(Decimal(self.value)/10**18)

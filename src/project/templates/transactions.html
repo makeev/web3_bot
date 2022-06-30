@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Transactions</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <tr>
+                    <th>Hash</th>
+                    <th>Gas</th>
+                    <th>Gas price</th>
+                    <th>Value</th>
+                    <th>Created at</th>
+                    <th>Block number</th>
+                    <th>From</th>
+                    <th>To</th>
+                </tr>
+                {% for obj in objects %}
+                    <tr>
+                        <td class="text-truncate"><a href="https://etherscan.io/tx/{{ obj.hash }}" target="_blank">{{ obj.hash }}</a></td>
+                        <td>{{ obj.gas }}</td>
+                        <td>{{ obj.gas_price }}</td>
+                        <td>{{ obj.value_decimal }}</td>
+                        <td>{{ obj.created_at.strftime("%H:%M:%S") }}</td>
+                        <td><a href="https://etherscan.io/block/{{ obj.block_number }}" target="_blank">{{ obj.block_number }}</a></td>
+                        <td class="text-truncate"><a href="https://etherscan.io/address/{{ obj.from_ }}" target="_blank">{{ obj.from_ }}</a></td>
+                        <td class="text-truncate"><a href="https://etherscan.io/address/{{ obj.to }}" target="_blank">{{ obj.to }}</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+            {% include "_pagination.html" %}
+        </div>
+    </div>
+{% endblock %}

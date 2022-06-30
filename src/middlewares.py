@@ -19,17 +19,17 @@ async def login_check_middleware(request):
     if request.path != '/admin/login' \
             and request.path != '/admin/debug' \
             and request.path != '/' \
-            and not request.path.startswith('/static') \
-            and not request.path.startswith('/i/'):
+            and not request.path.startswith('/static'):
         user = await get_logged_in_user(request)
         if not user:
             return response.redirect(app.url_for("admin.user_login"))
         else:
             # log user actions
-            log = UserLog(
-                user=user,
-                action=request.method,
-                path=request.path,
-                details=ujson.dumps(dict(request.form))
-            )
-            await log.commit()
+            # log = UserLog(
+            #     user=user,
+            #     action=request.method,
+            #     path=request.path,
+            #     details=ujson.dumps(dict(request.form))
+            # )
+            # await log.commit()
+            pass

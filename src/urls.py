@@ -21,5 +21,7 @@ admin.add_route(views.test_view, "/test/<param>", name="test", methods=["GET"])
 admin.add_route(views.debug_view, '/debug', methods=['GET'])
 admin.add_route(views.staff_view, "/staff", methods=["GET", "POST"])
 
+admin.add_route(views.transactions_list_view, "/transactions", methods=["GET"], name="transactions_list")
+
 
 app.blueprint(admin)
