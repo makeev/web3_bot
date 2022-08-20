@@ -22,6 +22,9 @@ admin.add_route(views.debug_view, '/debug', methods=['GET'])
 admin.add_route(views.staff_view, "/staff", methods=["GET", "POST"])
 
 admin.add_route(views.transactions_list_view, "/transactions", methods=["GET"], name="transactions_list")
+admin.add_route(views.contracts_list_view, "/contracts", methods=["GET"], name="contracts_list")
+admin.add_route(views.ContractCreateView.as_view(), "/contracts/add", methods=["GET", "POST"], name="contracts_add")
+admin.add_route(views.ContractUpdateView.as_view(), "/contracts/<id>", methods=["GET", "POST"], name="contracts_edit")
 
 
 app.blueprint(admin)

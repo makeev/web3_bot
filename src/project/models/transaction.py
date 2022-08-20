@@ -29,6 +29,23 @@ class Transaction(Document):
     r = fields.StrField()
     s = fields.StrField()
 
+    contract_function = fields.StrField(allow_none=True)
+    contract_params = fields.StrField(allow_none=True)
+    status = fields.StrField(allow_none=True)
+
     @property
     def value_decimal(self):
         return Decimal(Decimal(self.value)/10**18)
+
+    async def get_contract(self, w3):
+        """
+        Вытаскиваем контракт, если у нас есть abi
+        """
+        from project.models import Contract
+
+        if not self.to:
+            return
+
+        contract = await Contract.get_by_address(self.to)
+        if contract:
+            return contract.get_w3_contract(w3)

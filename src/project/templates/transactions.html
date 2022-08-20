@@ -13,8 +13,10 @@
                     <th>Gas</th>
                     <th>Gas price</th>
                     <th>Value</th>
+                    <th>Func</th>
                     <th>Created at</th>
                     <th>Block number</th>
+                    <th>Status</th>
                     <th>From</th>
                     <th>To</th>
                 </tr>
@@ -24,8 +26,10 @@
                         <td>{{ obj.gas }}</td>
                         <td>{{ obj.gas_price }}</td>
                         <td>{{ obj.value_decimal }}</td>
+                        <td>{{ obj.contract_function }}</td>
                         <td>{{ obj.created_at.strftime("%H:%M:%S") }}</td>
                         <td><a href="https://etherscan.io/block/{{ obj.block_number }}" target="_blank">{{ obj.block_number }}</a></td>
+                        <td>{{ obj.status }}</td>
                         <td class="text-truncate"><a href="https://etherscan.io/address/{{ obj.from_ }}" target="_blank">{{ obj.from_ }}</a></td>
                         <td class="text-truncate"><a href="https://etherscan.io/address/{{ obj.to }}" target="_blank">{{ obj.to }}</a></td>
                     </tr>

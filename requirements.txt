@@ -11,3 +11,4 @@ aioredis==2.0.1
 ujson==5.1.0
 plotly==5.8.0
 web3
+orjson

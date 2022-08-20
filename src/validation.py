@@ -1,4 +1,4 @@
-import ujson
+import orjson
 from sanic import response
 from webargs_sanic.sanicparser import SanicParser, HandleValidationError
 
@@ -31,7 +31,7 @@ async def handle_validation_error(request, err):
 
 def valid_json(value):
     try:
-        ujson.dumps(ujson.loads(value))
+        orjson.dumps(orjson.loads(value))
         return True
     except:
         return False

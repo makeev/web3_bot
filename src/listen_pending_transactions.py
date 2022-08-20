@@ -3,6 +3,7 @@ import asyncio
 
 from web3 import Web3, HTTPProvider
 from app import get_app
+from utils import myjson
 from utils.common import init_sanic_app
 
 from project.models import Transaction
@@ -44,9 +45,19 @@ async def main():
                     type=transaction['type'],
                     v=transaction['v'],
                     r=transaction['r'].hex(),
-                    s=transaction['s'].hex()
+                    s=transaction['s'].hex(),
+                    # status=transaction['status']  # можно получить в receipt
                 )
+
+                contract = await t.get_contract(w3)
+                if contract:
+                    func_obj, func_params = contract.decode_function_input(t.input)
+                    t.contract_function = func_obj.fn_name
+                    print(func_params)
+                    t.contract_params = myjson.dumps(func_params)
+
                 await t.commit()
+
                 print('new transaction https://etherscan.io/tx/{hash}'.format(hash=t.hash))
         else:
             # @TODO поставить 1s когда будет более дорогая нода
