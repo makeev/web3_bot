@@ -21,10 +21,16 @@ admin.add_route(views.test_view, "/test/<param>", name="test", methods=["GET"])
 admin.add_route(views.debug_view, '/debug', methods=['GET'])
 admin.add_route(views.staff_view, "/staff", methods=["GET", "POST"])
 
+# transactions
 admin.add_route(views.transactions_list_view, "/transactions", methods=["GET"], name="transactions_list")
+
+# contracts
 admin.add_route(views.contracts_list_view, "/contracts", methods=["GET"], name="contracts_list")
 admin.add_route(views.ContractCreateView.as_view(), "/contracts/add", methods=["GET", "POST"], name="contracts_add")
 admin.add_route(views.ContractUpdateView.as_view(), "/contracts/<id>", methods=["GET", "POST"], name="contracts_edit")
+
+# tokens
+admin.add_route(views.list_tokens_view, "/tokens", methods=["GET"], name="token_list")
 
 
 app.blueprint(admin)
