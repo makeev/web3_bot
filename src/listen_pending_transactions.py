@@ -1,6 +1,10 @@
+import json
 import time
 import asyncio
+from decimal import Decimal
 
+import orjson
+import ujson
 from web3 import Web3, HTTPProvider
 from app import get_app
 from utils import myjson
@@ -42,11 +46,11 @@ async def main():
                     gas_price=str(transaction['gasPrice']),
                     nonce=str(transaction['nonce']),
                     value=str(transaction['value']),
+                    value_decimal=Decimal(Decimal(transaction['value'])/10**18),
                     type=transaction['type'],
                     v=transaction['v'],
                     r=transaction['r'].hex(),
                     s=transaction['s'].hex(),
-                    # status=transaction['status']  # можно получить в receipt
                 )
 
                 contract = await t.get_contract(w3)

@@ -1,6 +1,9 @@
+import json
+from copy import copy
 from decimal import Decimal
 
 from umongo import Document, fields
+from utils.myjson import dumps
 
 from app import get_app
 from utils.common import add_timestamp
@@ -24,6 +27,7 @@ class Transaction(Document):
     gas_price = fields.StrField()
     nonce = fields.StrField()
     value = fields.StrField()
+    value_decimal = fields.DecimalField()
     type = fields.StrField()
     v = fields.IntField()
     r = fields.StrField()
@@ -34,8 +38,28 @@ class Transaction(Document):
     status = fields.StrField(allow_none=True)
 
     @property
-    def value_decimal(self):
-        return Decimal(Decimal(self.value)/10**18)
+    def params(self):
+        return json.loads(self.contract_params)
+
+    def pretty_params(self, known_addresses={}):
+        params = copy(self.params)
+        for key, value in self.params.items():
+            params[key] = self.pretty_param(value, known_addresses)
+
+        return dumps(params, indent=2)
+
+    @classmethod
+    def pretty_param(cls, value, known_addresses):
+        if isinstance(value, int) and value > 10**10:
+            return app.ctx.w3.fromWei(value, 'ether')
+
+        if isinstance(value, list):
+            return [cls.pretty_param(v, known_addresses) for v in value]
+
+        if isinstance(value, str) and value.startswith('0x'):
+            return "<a href='https://etherscan.io/address/{address}' target='_blank'>{name}</a>".format(address=value, name=known_addresses.get(value, value))
+
+        return value
 
     async def get_contract(self, w3):
         """

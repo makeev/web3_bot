@@ -4,6 +4,7 @@ import time
 import aioredis
 from sanic.application.state import Mode
 from sanic_jinja2 import SanicJinja2
+from web3 import Web3, HTTPProvider
 
 import settings
 from sanic import Sanic
@@ -33,6 +34,7 @@ app.blueprint(swagger_blueprint)
 
 
 app.ctx.redis = aioredis.from_url(settings.REDIS_URL, decode_responses=True)
+app.ctx.w3 = Web3(HTTPProvider(settings.ETH_HTTP_NODE_URL))
 session = Session(app, interface=AIORedisSessionInterface(app.ctx.redis))
 jinja = SanicJinja2(app, session=session)
 

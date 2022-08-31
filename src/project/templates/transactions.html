@@ -5,38 +5,70 @@
         <h1 class="h2">Transactions</h1>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table">
-                <tr>
-                    <th>Hash</th>
-                    <th>Gas</th>
-                    <th>Gas price</th>
-                    <th>Value</th>
-                    <th>Func</th>
-                    <th>Created at</th>
-                    <th>Block number</th>
-                    <th>Status</th>
-                    <th>From</th>
-                    <th>To</th>
-                </tr>
-                {% for obj in objects %}
+    <form>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table">
                     <tr>
-                        <td class="text-truncate"><a href="https://etherscan.io/tx/{{ obj.hash }}" target="_blank">{{ obj.hash }}</a></td>
-                        <td>{{ obj.gas }}</td>
-                        <td>{{ obj.gas_price }}</td>
-                        <td>{{ obj.value_decimal }}</td>
-                        <td>{{ obj.contract_function }}</td>
-                        <td>{{ obj.created_at.strftime("%H:%M:%S") }}</td>
-                        <td><a href="https://etherscan.io/block/{{ obj.block_number }}" target="_blank">{{ obj.block_number }}</a></td>
-                        <td>{{ obj.status }}</td>
-                        <td class="text-truncate"><a href="https://etherscan.io/address/{{ obj.from_ }}" target="_blank">{{ obj.from_ }}</a></td>
-                        <td class="text-truncate"><a href="https://etherscan.io/address/{{ obj.to }}" target="_blank">{{ obj.to }}</a></td>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>
+                            <select name="filters:value_decimal" class="form-select">
+                                <option value="">--</option>
+                                <option value=">0.1" {{ 'selected' if filters.value_decimal == '>0.1' }}>&gt;0.1</option>
+                                <option value=">0.5" {{ 'selected' if filters.value_decimal == '>0.5' }}>&gt;0.5</option>
+                                <option value=">1" {{ 'selected' if filters.value_decimal == '>1' }}>&gt;1</option>
+                                <option value=">10" {{ 'selected' if filters.value_decimal == '>10' }}>&gt;10</option>
+                                <option value=">100" {{ 'selected' if filters.value_decimal == '>100' }}>&gt;100</option>
+                            </select>
+                        </th>
+                        <th>
+                            <input type="text" class="form-control input-sm" style="width:200px"
+                                   name="filters:contract_function" placeholder="addLiquidity" value="{{ filters.contract_function }}">
+                        </th>
+                        <th></th>
+                        <th></th>
+                        <th><input type="submit" value="Filter" class="btn btn-sm btn-outline-primary"></th>
                     </tr>
-                {% endfor %}
-            </table>
+                    <tr>
+                        <th>Hash</th>
+                        <th>Gas</th>
+                        <th>Gas price</th>
+                        <th>Value</th>
+                        <th>Func</th>
+                        <th>At</th>
+                        <th>Block</th>
+                        <th></th>
+                    </tr>
+                    {% for obj in objects %}
+                        <tr>
+                            <td class="text-truncate">
+                                Tx: <a href="https://etherscan.io/tx/{{ obj.hash }}" target="_blank">{{ obj.hash }}</a>
+                                <br>
+                                From: <a href="https://etherscan.io/address/{{ obj.from_ }}"
+                                         target="_blank">{{ known_addresses.get(obj.from_, obj.from_) }}</a>
+                                <br>
+                                To: <a href="https://etherscan.io/address/{{ obj.to }}"
+                                       target="_blank">{{ known_addresses.get(obj.to, obj.to) }}</a>
+                            </td>
+                            <td>{{ obj.gas }}</td>
+                            <td>{{ obj.gas_price }}</td>
+                            <td>{{ obj.value_decimal }} ETH</td>
+                            <td>
+                                {{ obj.contract_function }}
+                                <code><pre>{{ obj.pretty_params(known_addresses) }}</pre></code>
+                            </td>
+                            <td>{{ obj.created_at.strftime("%H:%M:%S") }}</td>
+                            <td><a href="https://etherscan.io/block/{{ obj.block_number }}"
+                                   target="_blank">{{ obj.block_number }}</a></td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                </table>
 
-            {% include "_pagination.html" %}
+                {% include "_pagination.html" %}
+            </div>
         </div>
-    </div>
+    </form>
 {% endblock %}

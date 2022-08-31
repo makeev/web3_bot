@@ -1,6 +1,20 @@
+import decimal
+import json
 from functools import partial
 
-import ujson
+
+class BlockchainEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, decimal.Decimal):
+            return str(obj)
+
+        if isinstance(obj, int):
+            return str(obj)
+
+        if isinstance(obj, bytes):
+            return str(obj)
+
+        return json.JSONEncoder.default(self, obj)
 
 
-dumps = partial(ujson.dumps, reject_bytes=False)
+dumps = partial(json.dumps, cls=BlockchainEncoder)
