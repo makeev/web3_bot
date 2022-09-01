@@ -55,10 +55,13 @@ async def main():
 
                 contract = await t.get_contract(w3)
                 if contract:
-                    func_obj, func_params = contract.decode_function_input(t.input)
-                    t.contract_function = func_obj.fn_name
-                    print(func_params)
-                    t.contract_params = myjson.dumps(func_params)
+                    try:
+                        func_obj, func_params = contract.decode_function_input(t.input)
+                        t.contract_function = func_obj.fn_name
+                        print(func_params)
+                        t.contract_params = myjson.dumps(func_params)
+                    except ValueError as e:
+                        print('something wrong with contract %s' % e)
 
                 await t.commit()
 

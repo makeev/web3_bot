@@ -32,5 +32,10 @@ admin.add_route(views.ContractUpdateView.as_view(), "/contracts/<id>", methods=[
 # tokens
 admin.add_route(views.list_tokens_view, "/tokens", methods=["GET"], name="token_list")
 
+# indexes
+admin.add_route(views.indexes_view, "/indexes", methods=["GET"], name="indexes")
+admin.add_route(views.delete_index_view, "/indexes/<model_name>/<index_name>", methods=["DELETE"])
+admin.add_route(views.create_index_view, "/indexes/<model_name>", methods=["POST"])
+admin.add_route(views.ensure_indexes_view, "/indexes/ensure/<model_name>", methods=["POST"])
 
 app.blueprint(admin)

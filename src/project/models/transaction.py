@@ -37,6 +37,11 @@ class Transaction(Document):
     contract_params = fields.StrField(allow_none=True)
     status = fields.StrField(allow_none=True)
 
+    class Meta:
+        collection_name = 'transactions'
+        indexes = ['status', 'value', 'value_decimal', 'contract_function',
+                   'from_', 'to', 'block_hash', 'block_number']
+
     @property
     def params(self):
         return json.loads(self.contract_params)
@@ -58,6 +63,9 @@ class Transaction(Document):
 
         if isinstance(value, str) and value.startswith('0x'):
             return "<a href='https://etherscan.io/address/{address}' target='_blank'>{name}</a>".format(address=value, name=known_addresses.get(value, value))
+
+        if isinstance(value, str) and len(value) > 50 and value.startswith('b'):
+            return '...bytes...'
 
         return value
 

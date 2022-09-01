@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Индексы</h1>
+</div>
+
+
+{% for model_name, indexes in indexes.items() %}
+<h2>{{ model_name }}</h2>
+
+<form action="/admin/indexes/{{ model_name }}" method="post" class="add_index_form">
+    Поле: <input type="text" name="field">
+    <input type="submit" value="Добавить индекс" class="btn btn-primary btn-sm">
+    <input type="button" value="Пересоздать дефолтные индексы" class="btn btn-sm btn-success ensure-indexes" data-model="{{ model_name }}">
+</form>
+
+<table class="table table-striped">
+    <tr>
+        <th>name</th>
+        <th>field</th>
+        <th>v</th>
+        <th>sparse</th>
+        <td></td>
+    </tr>
+    {% for name, idx in indexes.items() %}
+        <tr>
+            <td>{{ name }}</td>
+            <td>{{ idx.key }}</td>
+            <td>{{ idx.v }}</td>
+            <td>{{ idx.sparse }}</td>
+            <td><a href="/admin/indexes/{{ model_name }}/{{ name }}" data-name="{{ name }}" class="delete"><i class="fas fa-trash-alt" style="color: red"></i></a></td>
+        </tr>
+    {% endfor %}
+</table>
+{% endfor %}
+
+
+
+<script>
+    $(document).ready(function() {
+        $('body').on('click', '.delete', function(e) {
+            e.preventDefault();
+
+            var f = $(this);
+
+            if (confirm('Удалить индекс?')) {
+                $.ajax({
+                    url: f.attr('href'),
+                    type: "DELETE",
+                    dataType: "json",
+                    success: function(json) {
+                        f.parents('tr').hide('slow');
+                        show_alert('danger', 'Индекс удален');
+                    },
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.responseText);
+                });
+            }
+        });
+
+        $('.add_index_form').on('submit', function(e) {
+            e.preventDefault();
+
+            $(this).find('input[type=submit]').attr('disabled', true).val('...');
+
+            $.post($(this).attr('action'), $(this).serialize(), function(json) {
+                window.location.reload();
+            }, 'json');
+        });
+
+        $('.ensure-indexes').on('click', function(e) {
+            e.preventDefault();
+
+            var model_name = $(this).data('model');
+
+            $.post("/admin/indexes/ensure/" + model_name, function(json) {
+                if (json.success) {
+                    window.location.reload();
+                }
+            }, 'json');
+        });;
+    });
+</script>
+{% endblock main %}
