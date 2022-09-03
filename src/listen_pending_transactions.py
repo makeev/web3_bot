@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 
-import click
-import time
 import asyncio
+import time
 from decimal import Decimal
 
-from web3 import Web3, HTTPProvider
-from web3.middleware import geth_poa_middleware
+import click
+
 from app import get_app
+from project.models import Transaction, CHAINS
 from utils import myjson
 from utils.common import init_sanic_app
-
-from project.models import Transaction, CHAINS
 
 
 async def main(chain_id):
@@ -22,10 +20,8 @@ async def main(chain_id):
     if not chain:
         raise Exception('chain with id %d not found' % chain_id)
 
-    w3 = Web3(HTTPProvider(chain.node_url))
+    w3 = chain.get_web3_instance()
     is_connected = w3.isConnected()
-    if chain.is_poa:
-        w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
     print('is_connected: %s' % is_connected)
 

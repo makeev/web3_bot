@@ -10,13 +10,19 @@
         <div class="col-md-12">
             <table class="table">
                 <tr>
-                    <th>Address</th>
+                    <th>Name</th>
                     <th>Abi</th>
+                    <th>Address</th>
+                    <th>ChainId</th>
+                    <th></th>
                 </tr>
                 {% for obj in objects %}
                     <tr>
                         <td>{{ obj.name }}</td>
+                        <td>{{ '<i class="fas fa-check" style="color: green"></i>' if obj.abi else '<i class="fas fa-times" style="color: red"></i>' }}</td>
                         <td>{{ obj.address }}</td>
+                        <td>{{ obj.chain_id }}</td>
+                        <td><a href="{{ url_for("admin.contracts_delete", id=obj.id) }}" class="delete"><i class="fas fa-trash-alt" style="color: red"></i></a></td>
                     </tr>
                 {% endfor %}
             </table>
@@ -24,4 +30,23 @@
             {% include "_pagination.html" %}
         </div>
     </div>
+
+    <script>
+    $(document).ready(function() {
+        $('.delete').on('click', function(e) {
+            e.preventDefault();
+
+            if (confirm('Вы уверены?')) {
+                $.ajax({
+                    url: $(this).attr('href'),
+                    method: "DELETE",
+                    contentType: "application/json",
+                    success: function(json) {
+                        window.location.reload()
+                    }
+                })
+            }
+        })
+    })
+    </script>
 {% endblock %}

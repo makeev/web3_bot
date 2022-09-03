@@ -27,7 +27,7 @@ admin.add_route(views.transactions_list_view, "/transactions", methods=["GET"], 
 # contracts
 admin.add_route(views.contracts_list_view, "/contracts", methods=["GET"], name="contracts_list")
 admin.add_route(views.ContractCreateView.as_view(), "/contracts/add", methods=["GET", "POST"], name="contracts_add")
-admin.add_route(views.ContractUpdateView.as_view(), "/contracts/<id>", methods=["GET", "POST"], name="contracts_edit")
+admin.add_route(views.delete_contract_view, "/contracts/<id>", methods=["DELETE"], name="contracts_delete")
 
 # tokens
 admin.add_route(views.list_tokens_view, "/tokens", methods=["GET"], name="token_list")
