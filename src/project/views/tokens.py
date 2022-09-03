@@ -7,4 +7,4 @@ app = get_app()
 
 @jinja.template("tokens.html")
 async def list_tokens_view(request):
-    return await get_pagination_context_for(Token, request, limit=100)
+    return await get_pagination_context_for(Token, request, limit=100, sort=[("symbol", 1)])

@@ -14,7 +14,7 @@ async def main():
             is_now = task.is_time()
             if is_now:
                 # @TODO тут еще можно как-то ловить статус выполнения таска потом
-                asyncio.create_task(task.to_call())
+                asyncio.create_task(task.run())
                 print('%s was run at %s' % (task, task.cron_string))
         await asyncio.sleep(60)
 

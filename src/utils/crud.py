@@ -4,7 +4,7 @@ from bson import ObjectId
 from sanic.exceptions import NotFound
 
 
-async def get_pagination_context_for(doc_class, request, limit, condition={}):
+async def get_pagination_context_for(doc_class, request, limit, condition={}, sort=None):
     """
     Return pagination context for defined model
     """
@@ -12,7 +12,10 @@ async def get_pagination_context_for(doc_class, request, limit, condition={}):
     total = await doc_class.count_documents(condition)
     pages = range(1, ceil(total / limit) + 1)
 
-    cursor = doc_class.find(condition).limit(limit).skip((page - 1) * limit).sort("$natural", -1)
+    if sort is None:
+        sort =[("$natural", -1)]
+
+    cursor = doc_class.find(condition).limit(limit).skip((page - 1) * limit).sort(sort)
     objects = await cursor.to_list(None)
 
     return {

@@ -12,3 +12,4 @@ ujson==5.1.0
 plotly==5.8.0
 web3
 orjson
+click

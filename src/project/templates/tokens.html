@@ -12,9 +12,11 @@
             {% for obj in objects %}
             <tr>
                 <td><a href="https://etherscan.io/address/{{ obj.address }}" target="_blank">{{ obj.symbol }}</a></td>
+                <td>{{ obj.decimals }}</td>
                 <td>{{ obj.name }}</td>
                 <td>{{ '<i class="fas fa-check" style="color: green"></i>' if obj.is_active else '<i class="fas fa-times" style="color: red"></i>' }}</td>
                 <td><img src="{{ obj.logo_uri }}" width="20" /></td>
+                <td>{{ obj.chain_id }}</td>
             </tr>
             {% endfor %}
         </table>

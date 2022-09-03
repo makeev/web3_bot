@@ -22,7 +22,6 @@ async def get_known_addresses() -> dict:
 
 @jinja.template("transactions.html")
 async def transactions_list_view(request):
-    print(request.query_args)
     condition = {}
 
     # смотрим какие фильтры применены
@@ -36,7 +35,6 @@ async def transactions_list_view(request):
             else:
                 condition[filter_field] = {"$regex": value, "$options": "i"}
 
-    print(condition)
     # собираем знакомые адреса, чтобы красиво их показать
     known_addresses = await get_known_addresses()
 
