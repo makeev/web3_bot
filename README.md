@@ -1,4 +1,4 @@
-# sanic skeleton with mongodb and minio
+# Web3 бот и всякие тулзы
 
 ### dev
 
