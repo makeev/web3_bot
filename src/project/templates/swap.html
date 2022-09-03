@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">SWAP</h1>
+    </div>
+
+    <div class="col-md-12">
+        <form method="post">
+            <div class="col-2 mb-3">
+                <select name="chain_id" id="chain_id" class="form-select form-select-sm">
+                    {% for _, chain in chains.items() %}
+                        <option
+                                value="{{ chain.chain_id }}"
+                                data-url="{{ url_for("admin.swap_in_chain", chain_id=chain.chain_id) }}"
+                                {{ 'selected' if chain_id == chain.chain_id }}>{{ chain.name }}</option>
+                    {% endfor %}
+
+                </select>
+            </div>
+            <div class="col-12">
+
+                <select name="token0" id="token0" class="token-select" data-live-search="true">
+                    {% for token in tokens %}
+                        <option
+                            data-content="<img src='{{ token.logo_uri }}' width='20' /><b>{{ token.name }}</b> ({{ token.chain.name }})" value="{{ token.address }}"
+                            data-tokens="{{ token.address }},{{ token.symbol }},{{ token.symbol }}"
+                            {{ 'selected' if token.symbol == 'WETH' }}
+                        >{{ token.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                ->
+                <select name="dex" id="dex" class="form-select form-select-sm" style="width: 150px; display: inline-block">
+                    <option value="uniswap_v2" selected>Uniswap V2</option>
+                    <option value="uniswap_v3">Uniswap V3</option>
+                </select>
+                ->
+                <select name="token1" id="token1" class="token-select" data-live-search="true">
+                    {% for token in tokens %}
+                        <option
+                                data-content="<img src='{{ token.logo_uri }}' width='20' /><b>{{ token.name }}</b> ({{ token.chain.name }})" value="{{ token.address }}"
+                                data-tokens="{{ token.address }},{{ token.symbol }},{{ token.symbol }}"
+                                {{ 'selected' if token.symbol == 'DAI' }}
+                        >{{ token.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                =
+                <span id="result">0.123123</span>
+                <a href="#" title="refresh" id="refresh_btn"><i class="fas fa-sync"></i></a>
+                <br><br>
+                <input type="submit" value="Make trade" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $.fn.selectpicker.Constructor.BootstrapVersion = '5';
+            $('.token-select').selectpicker();
+
+            $('#chain_id').on('change', function(e) {
+                window.location.href = $(this).find(':selected').data('url')
+            })
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+{% endblock %}

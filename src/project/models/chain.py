@@ -53,3 +53,9 @@ CHAINS = {
         _web3=None
     ),
 }
+
+
+class ChainMixin:
+    @property
+    def chain(self) -> Chain:
+        return CHAINS.get(self.chain_id)

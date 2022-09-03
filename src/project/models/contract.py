@@ -4,7 +4,7 @@ import aiohttp
 from umongo import Document, fields
 
 from app import get_app
-from project.models.chain import CHAINS, Chain
+from project.models.chain import ChainMixin
 
 app = get_app()
 
@@ -13,7 +13,7 @@ _CONTRACTS_CACHE = {}
 
 
 @app.ctx.umongo.register
-class Contract(Document):
+class Contract(ChainMixin, Document):
     name = fields.StrField()
     address = fields.StrField()
     abi = fields.StrField(allow_none=True)
@@ -38,10 +38,6 @@ class Contract(Document):
 
     def get_w3_contract(self, w3):
         return w3.eth.contract(address=self.address, abi=self.abi)
-
-    @property
-    def chain(self) -> Chain:
-        return CHAINS.get(self.chain_id)
 
     async def get_abi(self) -> Optional[str]:
         """

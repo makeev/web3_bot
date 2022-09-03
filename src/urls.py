@@ -38,4 +38,8 @@ admin.add_route(views.delete_index_view, "/indexes/<model_name>/<index_name>", m
 admin.add_route(views.create_index_view, "/indexes/<model_name>", methods=["POST"])
 admin.add_route(views.ensure_indexes_view, "/indexes/ensure/<model_name>", methods=["POST"])
 
+# swap
+admin.add_route(views.swap_view, "/swap", methods=["GET"], name="swap")
+admin.add_route(views.swap_view, "/swap/<chain_id>", methods=["GET"], name="swap_in_chain")
+
 app.blueprint(admin)

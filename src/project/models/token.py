@@ -1,6 +1,7 @@
 from umongo import Document, fields
 
 from app import get_app
+from project.models import ChainMixin
 from utils.common import add_timestamp
 
 app = get_app()
@@ -8,7 +9,7 @@ app = get_app()
 
 @app.ctx.umongo.register
 @add_timestamp
-class Token(Document):
+class Token(ChainMixin, Document):
     name = fields.StrField()
     address = fields.StrField()
     symbol = fields.StrField()
