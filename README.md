@@ -50,7 +50,7 @@ POLYGONSCAN_API_KEY='...'
 ## запуск тасков
 
 Есть просто реализованная manage команда, которая позволяет запускать все что 
-есть в src/project/tasks.py
+есть в [src/project/tasks.py](src/project/tasks.py)
 
 ```
 ./manage.py parse_uniswap_tokens
