@@ -29,6 +29,11 @@
                         </th>
                         <th></th>
                         <th></th>
+                        <th>
+                            <select name="filters:chain_id" class="form-select">
+                                <option value="">--</option>
+                            </select>
+                        </th>
                         <th><input type="submit" value="Filter" class="btn btn-sm btn-outline-primary"></th>
                     </tr>
                     <tr>
@@ -39,7 +44,8 @@
                         <th>Func</th>
                         <th>At</th>
                         <th>Block</th>
-                        <th></th>
+                        <th>chainId</th>
+                        <td></td>
                     </tr>
                     {% for obj in objects %}
                         <tr>
@@ -62,6 +68,7 @@
                             <td>{{ obj.created_at.strftime("%H:%M:%S") }}</td>
                             <td><a href="https://etherscan.io/block/{{ obj.block_number }}"
                                    target="_blank">{{ obj.block_number }}</a></td>
+                            <td>{{ obj.chain_id }}</td>
                             <td></td>
                         </tr>
                     {% endfor %}

@@ -1,6 +1,6 @@
 from app import jinja, get_app
 
-from project.models import Transaction, Contract, Token
+from project.models import Transaction, Contract, Token, CHAINS
 from utils.crud import get_pagination_context_for
 
 app = get_app()
@@ -41,4 +41,5 @@ async def transactions_list_view(request):
     context = await get_pagination_context_for(Transaction, request, 100, condition=condition)
     context['known_addresses'] = known_addresses
     context['filters'] = filters
+    context['chains'] = CHAINS
     return context

@@ -1,29 +1,36 @@
-import json
+#!/usr/bin/env python
+
+import click
 import time
 import asyncio
 from decimal import Decimal
 
-import orjson
-import ujson
 from web3 import Web3, HTTPProvider
+from web3.middleware import geth_poa_middleware
 from app import get_app
 from utils import myjson
 from utils.common import init_sanic_app
 
-from project.models import Transaction
-from settings import ETH_HTTP_NODE_URL
+from project.models import Transaction, CHAINS
 
 
-async def main():
+async def main(chain_id):
     app = get_app()
     await init_sanic_app(app)
 
-    w3 = Web3(HTTPProvider(ETH_HTTP_NODE_URL))
+    chain = CHAINS.get(chain_id)
+    if not chain:
+        raise Exception('chain with id %d not found' % chain_id)
+
+    w3 = Web3(HTTPProvider(chain.node_url))
     is_connected = w3.isConnected()
+    if chain.is_poa:
+        w3.middleware_onion.inject(geth_poa_middleware, layer=0)
+
     print('is_connected: %s' % is_connected)
 
     # uniswap router
-    router_address = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+    router_address = chain.uniswap_v2_router  # @TODO или брать из параметров cli
 
     last_block = None
     while True:
@@ -51,6 +58,7 @@ async def main():
                     v=transaction['v'],
                     r=transaction['r'].hex(),
                     s=transaction['s'].hex(),
+                    chain_id=chain.chain_id
                 )
 
                 contract = await t.get_contract(w3)
@@ -65,12 +73,17 @@ async def main():
 
                 await t.commit()
 
-                print('new transaction https://etherscan.io/tx/{hash}'.format(hash=t.hash))
+                print('new transaction {explorer_url}/tx/{hash}'.format(explorer_url=chain.explorer_url, hash=t.hash))
         else:
             # @TODO поставить 1s когда будет более дорогая нода
             time.sleep(5)
 
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    @click.command()
+    @click.option('--chain_id', type=int, required=True, prompt=True)
+    def run(chain_id):
+        asyncio.run(main(chain_id))
+
+    run()
 

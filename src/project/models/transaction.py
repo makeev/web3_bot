@@ -36,6 +36,7 @@ class Transaction(Document):
     contract_function = fields.StrField(allow_none=True)
     contract_params = fields.StrField(allow_none=True)
     status = fields.StrField(allow_none=True)
+    chain_id = fields.IntField()
 
     class Meta:
         collection_name = 'transactions'
@@ -44,9 +45,13 @@ class Transaction(Document):
 
     @property
     def params(self):
-        return json.loads(self.contract_params)
+        if self.contract_params:
+            return json.loads(self.contract_params)
 
     def pretty_params(self, known_addresses={}):
+        if not self.params:
+            return ''
+
         params = copy(self.params)
         for key, value in self.params.items():
             params[key] = self.pretty_param(value, known_addresses)
