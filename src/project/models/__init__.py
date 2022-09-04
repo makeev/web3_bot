@@ -3,3 +3,4 @@ from .transaction import *
 from .contract import *
 from .chain import *
 from .token import *
+from .wallet import *

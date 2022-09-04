@@ -42,4 +42,10 @@ admin.add_route(views.ensure_indexes_view, "/indexes/ensure/<model_name>", metho
 admin.add_route(views.swap_view, "/swap", methods=["GET"], name="swap")
 admin.add_route(views.swap_view, "/swap/<chain_id>", methods=["GET"], name="swap_in_chain")
 
+# wallets
+admin.add_route(views.list_wallets_view, "/wallets", methods=["GET"], name="wallets_list")
+admin.add_route(views.WalletCreateView.as_view(), "/wallets/add", methods=["GET", "POST"], name="wallets_add")
+admin.add_route(views.delete_wallet_view, "/wallets/<id>", methods=["DELETE"], name="wallets_delete")
+admin.add_route(views.get_native_balances_view, "/wallets/<id>/native_balances", methods=["GET"], name="wallets_native_balances")
+
 app.blueprint(admin)

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Wallets</h1>
+        <a href="{{ url_for("admin.wallets_add") }}" class="btn btn-primary"><i class="fas fa-plus"></i></a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th></th>
+                </tr>
+                {% for obj in objects %}
+                    <tr>
+                        <td>{{ obj.name }}</td>
+                        <td>{{ obj.address }}</td>
+                        <td>
+                            <span class="balances"></span>
+                            <a href="{{ url_for("admin.wallets_native_balances", id=obj.id) }}" title="get native balances" class="get_native_balances_btn"><i class="fas fa-sync"></i></a>
+                        </td>
+                        <td><a href="{{ url_for("admin.wallets_delete", id=obj.id) }}" class="delete"><i class="fas fa-trash-alt" style="color: red"></i></a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+            {% include "_pagination.html" %}
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        $('.delete').on('click', function(e) {
+            e.preventDefault();
+
+            if (confirm('Вы уверены?')) {
+                $.ajax({
+                    url: $(this).attr('href'),
+                    method: "DELETE",
+                    contentType: "application/json",
+                    success: function(json) {
+                        window.location.reload()
+                    }
+                })
+            }
+        })
+
+        $('.get_native_balances_btn').on('click', function(e) {
+            e.preventDefault();
+
+            var $balances_html = $(this).parent().find('.balances');
+            $balances_html.html(small_spinner_html);
+
+            $.getJSON($(this).attr('href'), function(json) {
+                let $html = '';
+
+                $.each(json, function(chain_name, data) {
+                    $html += chain_name+': '+data['amount']+' '+data['symbol']+'<br>';
+                })
+
+                $balances_html.html($html);
+            })
+        })
+    })
+    </script>
+{% endblock %}
