@@ -76,6 +76,6 @@ async def get_amount_token_to_token_swap_view(
     )
 
     return response.json({
-        "amount": '%.6f' % from_basis_points(price_basis_points, token_from.decimals),
+        "amount": '%.6f' % from_basis_points(price_basis_points, token_to.decimals),
         "amount_basis_points": str(price_basis_points)
     })

@@ -26,9 +26,9 @@
                 <input type="text" class="form-control form-control-sm short-form-control" name="amount" placeholder="1.0" value="1">
 
                 <select name="token_from_address" id="token_from_address" class="token-select" data-live-search="true">
-                    {% for token in tokens %}
+                    {% for token in tokens if token.chain_id == chain_id %}
                         <option
-                            data-content="<img src='{{ token.logo_uri }}' width='20' /><b>{{ token.name }}</b> ({{ token.chain.name }})"
+                            data-content="<img src='{{ token.logo_uri }}' width='20' /><b>{{ token.name }}</b> ({{ token.symbol }})"
                             value="{{ token.address }}"
                             data-tokens="{{ token.address }},{{ token.symbol }},{{ token.symbol }}"
                             {{ 'selected' if token.symbol == 'WETH' }}
@@ -43,7 +43,7 @@
                 </select>
                 ->
                 <select name="token_to_address" id="token_to_address" class="token-select" data-live-search="true">
-                    {% for token in tokens %}
+                    {% for token in tokens if token.chain_id == chain_id %}
                         <option
                                 data-content="<img src='{{ token.logo_uri }}' width='20' /><b>{{ token.name }}</b> ({{ token.chain.name }})" value="{{ token.address }}"
                                 data-tokens="{{ token.address }},{{ token.symbol }},{{ token.symbol }}"
