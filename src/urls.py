@@ -41,6 +41,7 @@ admin.add_route(views.ensure_indexes_view, "/indexes/ensure/<model_name>", metho
 # swap
 admin.add_route(views.swap_view, "/swap", methods=["GET"], name="swap")
 admin.add_route(views.swap_view, "/swap/<chain_id>", methods=["GET"], name="swap_in_chain")
+admin.add_route(views.get_amount_token_to_token_swap_view, "/swap/get_amount", methods=["POST"], name="swap_get_amount")
 
 # wallets
 admin.add_route(views.list_wallets_view, "/wallets", methods=["GET"], name="wallets_list")

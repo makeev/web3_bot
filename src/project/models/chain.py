@@ -17,6 +17,7 @@ class Chain:
     scan_api_url: str
     scan_api_key: str
     is_poa: bool
+    uniswap_v2_factory: str
     uniswap_v2_router: str
     currency_symbol: str
     _web3: object
@@ -39,6 +40,7 @@ CHAINS = {
         scan_api_url="https://api.etherscan.io/api",
         scan_api_key=app.config.ETHERSCAN_API_KEY,
         is_poa=False,
+        uniswap_v2_factory='0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
         uniswap_v2_router='0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
         currency_symbol='ETH',
         _web3=None,
@@ -51,6 +53,7 @@ CHAINS = {
         scan_api_url="https://api.polygonscan.com/api",
         scan_api_key=app.config.POLYGONSCAN_API_KEY,
         is_poa=True,
+        uniswap_v2_factory='0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32',
         uniswap_v2_router='0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff',
         currency_symbol='MATIC',
         _web3=None,

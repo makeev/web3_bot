@@ -24,4 +24,5 @@ class Token(ChainMixin, Document):
             'symbol',
             'chain_id',
             {'key': ['symbol', 'chain_id'], 'unique': True},
+            {'key': ['address', 'chain_id'], 'unique': True},
         ]

@@ -41,7 +41,7 @@ def cronjob(cron_string):
 
 @cronjob("0 * * * *")
 async def parse_uniswap_tokens(app):
-    async def _get_or_create_token(row, chain_id):
+    async def _get_or_create_token(row, address, chain_id):
         chain = CHAINS.get(int(chain_id))
         if not chain:
             return 0
@@ -56,7 +56,7 @@ async def parse_uniswap_tokens(app):
         token = Token(symbol=row['symbol'])
 
         try:
-            token.address = row['address']
+            token.address = address
             token.name = row['name']
             token.decimals = row['decimals']
             token.logo_uri = row['logoURI']
@@ -76,11 +76,11 @@ async def parse_uniswap_tokens(app):
         data = await r.json()
         counter = 0
         for row in data['tokens']:
-            counter += await _get_or_create_token(row, row['chainId'])
+            counter += await _get_or_create_token(row, row['address'], row['chainId'])
             # смотрим есть ли этот токен в других сетях
             bridge_info = row.get('extensions', {}).get('bridgeInfo', {})
             for chain_id, data in bridge_info.items():
-                counter += await _get_or_create_token(row, chain_id)
+                counter += await _get_or_create_token(row, data['tokenAddress'], chain_id)
 
         print('%d tokens added' % counter)
 
