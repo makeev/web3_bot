@@ -200,22 +200,6 @@ function deepSerializeForm(form) {
 }
 
 $(document).ready(function () {
-    $.ajaxSetup({
-        error: function(jqXHR) {
-            console.log('error 400')
-            if (jqXHR.responseJSON && jqXHR.responseJSON.json.error) {
-                // ошибка валидации, не хватило полей
-                var error = jqXHR.responseJSON.json.error;
-                if (error.message) {
-                    alert(error.message);
-                }
-                if (error.error_user_title) {
-                    alert(error.error_user_title + error.error_user_msg);
-                }
-            }
-        }
-    })
-
     function getFromSource() {
         var tooltipText = "";
         $.ajax({

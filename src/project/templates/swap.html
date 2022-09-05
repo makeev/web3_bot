@@ -36,12 +36,14 @@
                         </option>
                     {% endfor %}
                 </select>
-                ->
+
+                <a href="#" id="swap_tokens">&lt;-&gt;</a>
+
                 <select name="dex" id="dex" class="form-select form-select-sm short-form-control">
                     <option value="uniswap_v2" selected>Uniswap V2</option>
                     <option value="uniswap_v3">Uniswap V3</option>
                 </select>
-                ->
+
                 <select name="token_to_address" id="token_to_address" class="token-select" data-live-search="true">
                     {% for token in tokens if token.chain_id == chain_id %}
                         <option
@@ -76,13 +78,24 @@
 
                 $.post($(this).attr('action'), $(this).serialize(), function(json) {
                     $result.html(json.amount);
-                }, 'json');
+                }, 'json').fail(function() {
+                    $result.html('--');
+                });
             })
 
             $('#refresh_btn').on('click', function(e) {
                 e.preventDefault();
 
                 $('#swap_form').submit();
+            })
+
+            $('#swap_tokens').on('click', function () {
+                let token_from = $('#token_from_address').find('option:selected').val();
+                let token_to = $('#token_to_address').find('option:selected').val();
+                $('#token_from_address option').removeAttr('selected').filter('[value='+token_to+']').prop('selected', true);
+                $('#token_to_address option').removeAttr('selected').filter('[value='+token_from+']').prop('selected', true);
+                $('.token-select').selectpicker("destroy");
+                $('.token-select').selectpicker("refresh");
             })
         });
     </script>
