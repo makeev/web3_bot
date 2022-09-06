@@ -3,7 +3,7 @@ from uniswap import Uniswap
 from webargs import fields
 
 from app import get_app, jinja
-from project.models import Token, CHAINS, Wallet
+from project.models import Token, CHAINS, Wallet, DEXS
 from utils.crud import get_list
 from utils.wei_converter import to_basis_points, from_basis_points
 from validation import use_kwargs
@@ -53,21 +53,8 @@ async def get_amount_token_to_token_swap_view(
     chain = CHAINS[chain_id]
     w3 = chain.get_web3_instance()
 
-    client = None
-    if dex == 'uniswap_v2':
-        client = Uniswap(
-            version=2, web3=w3,
-            # нам не нужен кошелек, чтобы просто посмотреть цену
-            address=None, private_key=None,
-            # uniswap-python не знает адреса в polygon, там это quickswap
-            factory_contract_addr=chain.uniswap_v2_factory,
-            router_contract_addr=chain.uniswap_v2_router,
-        )
-    if dex == 'uniswap_v3':
-        # тут все проще чем с v2
-        client = Uniswap(version=3, web3=w3, address=None, private_key=None)
-
-    assert client is not None, 'DEX not found'
+    dex = DEXS[chain_id][dex]
+    client = dex.get_uniswap_instance()
 
     price_basis_points = client.get_price_input(
         token_from.address, token_to.address, amount,
