@@ -1,0 +1,11 @@
+<select name="{{ name }}" id="{{ name }}" class="token-select" data-live-search="true">
+    {% for token in tokens if token.chain_id == chain_id %}
+        <option
+                data-content="<img src='{{ token.logo_uri }}' width='20' /><b>{{ token.symbol }}</b> ({{ token.name }})"
+                value="{{ token.address }}"
+                data-tokens="{{ token.address }},{{ token.symbol }},{{ token.symbol }}"
+                {{ 'selected' if token.symbol == selected }}
+        >{{ token.name }}
+        </option>
+    {% endfor %}
+</select>
