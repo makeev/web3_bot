@@ -18,6 +18,11 @@ class Token(ChainMixin, Document):
     is_active = fields.BoolField(default=False)
     chain_id = fields.IntField()
 
+    # основная монета, в которой не стыдно хранить сбережение(WETH, USDC, USDT,...)
+    is_base_asset = fields.BoolField(default=False)
+    # торгуется ли этот токен, т.е. есть ли ликвидность
+    is_tradable = fields.BoolField(default=False)
+
     _CACHE = {}
 
     class Meta:

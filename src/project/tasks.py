@@ -3,8 +3,12 @@ import asyncio
 import aiohttp
 import pycron
 from functools import wraps, partial
+
+from eth_utils import to_wei
+from web3.exceptions import ContractLogicError
+
 from app import get_app
-from project.models import Token, CHAINS
+from project.models import Token, CHAINS, DEXS
 from marshmallow.exceptions import ValidationError
 
 app = get_app()
@@ -85,4 +89,22 @@ async def parse_uniswap_tokens(app):
         print('%d tokens added' % counter)
 
 
+@cronjob("0 * * * *")
+async def check_tokens_liquidity(app):
+    # @TODO слишком простой метод, не учитывает разные сети и биржи
 
+    dex = DEXS[137]['uniswap_v2']
+    client = dex.get_uniswap_instance()
+    token_from = await Token.find_one({"chain_id": 137, "symbol": "WETH"})
+
+    async for token in Token.find({"is_active": True}):
+        print(token.symbol)
+        try:
+            amount_basis_points = client.get_price_input(
+                token_from.address, token.address, to_wei('1.0', 'ether'),
+            )
+            token.is_tradable = amount_basis_points > 0
+        except ContractLogicError:
+            token.is_tradable = False
+        finally:
+            await token.commit()

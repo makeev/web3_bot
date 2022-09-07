@@ -42,7 +42,46 @@
 
                 =
                 <span class="result"></span>
-                <a href="#" title="refresh" id="refresh_btn"><i class="fas fa-sync"></i></a>
+                <a href="#" title="refresh" class="refresh_btn"><i class="fas fa-sync"></i></a>
+            </div>
+        </form>
+
+        <form method="post" class="arb-form" action="{{ url_for("admin.arb_calc") }}">
+            <div class="col-12">
+                {% with name="path", chain_id=chain.chain_id, tokens=tokens, selected="USDT" %}
+                    {% include "_token_select.html" %}
+                {% endwith %}
+
+                <select name="path" class="form-select form-select-sm short-form-control">
+                    <option value="uniswap_v2">Uniswap V2</option>
+                    <option value="uniswap_v3" selected>Uniswap V3</option>
+                </select>
+
+                {% with name="path", chain_id=chain.chain_id, tokens=tokens, selected="DAI" %}
+                    {% include "_token_select.html" %}
+                {% endwith %}
+
+                <select name="path" class="form-select form-select-sm short-form-control">
+                    <option value="uniswap_v2" selected>Uniswap V2</option>
+                    <option value="uniswap_v3">Uniswap V3</option>
+                </select>
+
+                {% with name="path", chain_id=chain.chain_id, tokens=tokens, selected="WMATIC" %}
+                    {% include "_token_select.html" %}
+                {% endwith %}
+
+                <select name="path" class="form-select form-select-sm short-form-control">
+                    <option value="uniswap_v2">Uniswap V2</option>
+                    <option value="uniswap_v3" selected>Uniswap V3</option>
+                </select>
+
+                {% with name="path", chain_id=chain.chain_id, tokens=tokens, selected="USDC" %}
+                    {% include "_token_select.html" %}
+                {% endwith %}
+
+                =
+                <span class="result"></span>
+                <a href="#" title="refresh" class="refresh_btn"><i class="fas fa-sync"></i></a>
             </div>
         </form>
     </div>
@@ -52,7 +91,7 @@
             $.fn.selectpicker.Constructor.BootstrapVersion = '5';
             $('.token-select').selectpicker();
 
-            $('#refresh_btn').on('click', function(e) {
+            $('.refresh_btn').on('click', function(e) {
                 e.preventDefault();
 
                 var $form = $(this).parents('.arb-form');

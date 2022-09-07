@@ -39,6 +39,9 @@
 }
 
 .short-form-control {
-    width: 150px;
+    width: 100px;
     display: inline-block
+}
+.bootstrap-select {
+    width: 150px !important;
 }
