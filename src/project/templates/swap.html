@@ -25,7 +25,7 @@
             <div class="col-12">
                 <input type="text" class="form-control form-control-sm short-form-control" name="amount" placeholder="1.0" value="1">
 
-                {% with name="token_from_address", chain_id=chain_id, tokens=tokens, selected="WETH" %}
+                {% with name="token_from_address", id="token_from_address", chain_id=chain_id, tokens=tokens, selected="WETH" %}
                     {% include "_token_select.html" %}
                 {% endwith %}
 
@@ -36,7 +36,7 @@
                     <option value="uniswap_v3">Uniswap V3</option>
                 </select>
 
-                {% with name="token_to_address", chain_id=chain_id, tokens=tokens, selected="DAI" %}
+                {% with name="token_to_address", id="token_to_address", chain_id=chain_id, tokens=tokens, selected="DAI" %}
                     {% include "_token_select.html" %}
                 {% endwith %}
 

@@ -49,4 +49,8 @@ admin.add_route(views.WalletCreateView.as_view(), "/wallets/add", methods=["GET"
 admin.add_route(views.delete_wallet_view, "/wallets/<id>", methods=["DELETE"], name="wallets_delete")
 admin.add_route(views.get_native_balances_view, "/wallets/<id>/native_balances", methods=["GET"], name="wallets_native_balances")
 
+# arb
+admin.add_route(views.ArbView.as_view(), "/arb", methods=["GET"], name="arb")
+admin.add_route(views.calc_arb_path_view, "/arb/calc", methods=["POST"], name="arb_calc")
+
 app.blueprint(admin)

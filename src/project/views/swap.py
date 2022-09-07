@@ -1,9 +1,8 @@
 from sanic import response
-from uniswap import Uniswap
 from webargs import fields
 
 from app import get_app, jinja
-from project.models import Token, CHAINS, Wallet, DEXS
+from project.models import Token, CHAINS, DEXS
 from utils.crud import get_list
 from utils.wei_converter import to_basis_points, from_basis_points
 from validation import use_kwargs
