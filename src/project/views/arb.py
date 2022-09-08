@@ -16,7 +16,8 @@ class ArbView(HTTPMethodView):
     @jinja.template("arb.html")
     async def get(self, request):
         return {
-            "tokens": await get_list(Token, {"$or": [{"is_base_asset": True}, {"is_tradable": True}]}),
+            # "tokens": await get_list(Token, {"$or": [{"is_base_asset": True}, {"is_tradable": True}]}),
+            "tokens": await get_list(Token),
             "chain": CHAINS[137],  # пока нас интересует только polygon
         }
 
@@ -37,10 +38,9 @@ async def calc_arb_path_view(request, path, amount):
             token_from = await Token.get_by_address_n_chain(change[0], chain.chain_id)
             token_to = await Token.get_by_address_n_chain(change[2], chain.chain_id)
             dex = DEXS[chain.chain_id][change[1]]
-            client = dex.get_uniswap_instance()
 
-            amount_basis_points = client.get_price_input(
-                token_from.address, token_to.address, amount_basis_points
+            amount_basis_points = await dex.get_price_input(
+                token_from, token_to, amount_basis_points
             )
             change = [token_to.address]
 

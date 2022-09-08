@@ -23,8 +23,9 @@
                 {% endwith %}
 
                 <select name="path" class="form-select form-select-sm short-form-control">
-                    <option value="uniswap_v2" selected>Uniswap V2</option>
-                    <option value="uniswap_v3">Uniswap V3</option>
+                    <option value="uniswap_v2" selected>UniV2</option>
+                    <option value="uniswap_v3">UniV3</option>
+                    <option value="zx">0x</option>
                 </select>
 
                 {% with name="path", chain_id=chain.chain_id, tokens=tokens, selected="DAI" %}
@@ -32,8 +33,9 @@
                 {% endwith %}
 
                 <select name="path" class="form-select form-select-sm short-form-control">
-                    <option value="uniswap_v2">Uniswap V2</option>
-                    <option value="uniswap_v3" selected>Uniswap V3</option>
+                    <option value="uniswap_v2" selected>UniV2</option>
+                    <option value="uniswap_v3">UniV3</option>
+                    <option value="zx">0x</option>
                 </select>
 
                 {% with name="path", chain_id=chain.chain_id, tokens=tokens, selected="WETH" %}
@@ -53,8 +55,9 @@
                 {% endwith %}
 
                 <select name="path" class="form-select form-select-sm short-form-control">
-                    <option value="uniswap_v2">Uniswap V2</option>
-                    <option value="uniswap_v3" selected>Uniswap V3</option>
+                    <option value="uniswap_v2" selected>UniV2</option>
+                    <option value="uniswap_v3">UniV3</option>
+                    <option value="zx">0x</option>
                 </select>
 
                 {% with name="path", chain_id=chain.chain_id, tokens=tokens, selected="DAI" %}
@@ -62,8 +65,9 @@
                 {% endwith %}
 
                 <select name="path" class="form-select form-select-sm short-form-control">
-                    <option value="uniswap_v2" selected>Uniswap V2</option>
-                    <option value="uniswap_v3">Uniswap V3</option>
+                    <option value="uniswap_v2" selected>UniV2</option>
+                    <option value="uniswap_v3">UniV3</option>
+                    <option value="zx">0x</option>
                 </select>
 
                 {% with name="path", chain_id=chain.chain_id, tokens=tokens, selected="WMATIC" %}
@@ -71,8 +75,9 @@
                 {% endwith %}
 
                 <select name="path" class="form-select form-select-sm short-form-control">
-                    <option value="uniswap_v2">Uniswap V2</option>
-                    <option value="uniswap_v3" selected>Uniswap V3</option>
+                    <option value="uniswap_v2" selected>UniV2</option>
+                    <option value="uniswap_v3">UniV3</option>
+                    <option value="zx">0x</option>
                 </select>
 
                 {% with name="path", chain_id=chain.chain_id, tokens=tokens, selected="USDC" %}
@@ -84,6 +89,28 @@
                 <a href="#" title="refresh" class="refresh_btn"><i class="fas fa-sync"></i></a>
             </div>
         </form>
+    </div>
+
+    <div class="row mt-3">
+        <h4>0x tester</h4>
+        <div class="col-md-3">
+            <label>from</label>
+            <input type="text" class="form-control">
+            <label>to</label>
+            <input type="text" class="form-control">
+        </div>
+
+        <div class="col-md-3">
+            <input type="text" class="form-control">
+        </div>
+
+        <div class="col-md-3">
+            <input type="text" class="form-control">
+        </div>
+
+        <div class="col-md-3">
+            result
+        </div>
     </div>
 
     <script>

@@ -4,6 +4,7 @@ from uniswap import Uniswap
 
 from app import get_app
 from project.models import ChainMixin
+from utils.zerox import ZeroXProtocol
 
 app = get_app()
 
@@ -15,7 +16,7 @@ class Dex(ChainMixin):
     factory_address: str
     router_address: str
     uniswap_version: int
-    _uniswap_instance: object
+    _uniswap_instance: Uniswap
 
     def get_uniswap_instance(self, address=None, private_key=None):
         if not self._uniswap_instance:
@@ -29,6 +30,31 @@ class Dex(ChainMixin):
             )
 
         return self._uniswap_instance
+
+    @staticmethod
+    def token_to_address(token):
+        if hasattr(token, 'address'):
+            return token.address
+
+        return str(token)
+
+    async def get_price_input(self, token_from, token_to, amount_bpt: int) -> int:
+        token_from = self.token_to_address(token_from)
+        token_to = self.token_to_address(token_to)
+
+        if self.uniswap_version:
+            # uniswap like dex
+            client = self.get_uniswap_instance()
+            return client.get_price_input(token_from, token_to, amount_bpt)
+
+        if self.name.startswith('0x'):  # 0x protocol
+            async with ZeroXProtocol() as zx:
+                r = await zx.price(sellToken=token_from, buyToken=token_to, sellAmount=amount_bpt)
+                data = await r.json()
+                return int(data['buyAmount'])
+
+        # @TODO ничего не нашли?
+        return 0
 
 
 DEXS = {
@@ -67,5 +93,13 @@ DEXS = {
             router_address=None,
             _uniswap_instance=None,
         ),
+        "zx": Dex(
+            name="0x protocol",
+            chain_id=137,
+            uniswap_version=None,
+            factory_address=None,
+            router_address=None,
+            _uniswap_instance=None,
+        )
     }
 }
