@@ -50,7 +50,7 @@
                     {% for obj in objects %}
                         <tr>
                             <td class="text-truncate">
-                                Tx: <a href="https://etherscan.io/tx/{{ obj.hash }}" target="_blank">{{ obj.hash }}</a>
+                                Tx: <a href="https://polygonscan.com/tx/{{ obj.hash }}" target="_blank">{{ obj.hash }}</a>
                                 <br>
                                 From: <a href="https://etherscan.io/address/{{ obj.from_ }}"
                                          target="_blank">{{ known_addresses.get(obj.from_, obj.from_) }}</a>

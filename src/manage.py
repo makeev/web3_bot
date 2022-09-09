@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import asyncio
 import click
+from coloring import print_orange
 from app import get_app
 from utils.common import init_sanic_app
 
@@ -11,7 +12,7 @@ async def main(task_name):
     # импортируем заранее все что можно запускать
     from project import tasks
 
-    print('run! %s' % task_name)
+    print_orange('run! %s' % task_name)
     task = getattr(tasks, task_name)(app)
     await task.run()
 

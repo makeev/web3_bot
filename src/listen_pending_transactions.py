@@ -38,6 +38,12 @@ async def main(chain_id):
                 if transaction['to'] != router_address:
                     continue
 
+                transaction_exists = await Transaction.find_one({
+                    "chain_id": 137, "hash": transaction['hash'].hex(),
+                })
+                if transaction_exists:
+                    continue
+
                 t = Transaction(
                     block_hash=transaction['blockHash'].hex(),
                     block_number=transaction['blockNumber'],

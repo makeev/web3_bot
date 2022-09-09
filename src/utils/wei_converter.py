@@ -12,6 +12,8 @@ def from_basis_points(number: int, decimals: int):
     if number == 0:
         return 0
 
+    number = int(number)
+
     if number < MIN_WEI or number > MAX_WEI:
         raise ValueError("value must be between 1 and 2**256 - 1")
 
