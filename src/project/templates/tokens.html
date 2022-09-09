@@ -18,6 +18,7 @@
                 <th>IsActive</th>
                 <th>IsBaseAsset</th>
                 <th>IsTradable</th>
+                <th>HasAbi</th>
                 <th>Logo</th>
                 <th>ChainId</th>
             </tr>
@@ -35,6 +36,9 @@
                 </td>
                 <td>
                     <a class="toggle-bool-field" data-field="is_tradable" href="{{ url_for("admin.toggle_token_bool_field", id=obj.id) }}">{{ '<i class="fas fa-check" style="color: green"></i>' if obj.is_tradable else '<i class="fas fa-times" style="color: red"></i>' }}</a>
+                </td>
+                <td>
+                    <a href="{{ url_for("admin.token_get_abi", id=obj.id) }}" class="get-abi">{{ '<i class="fas fa-check" style="color: green"></i>' if obj.abi else '<i class="fas fa-times" style="color: red"></i>' }}</a>
                 </td>
                 <td><img src="{{ obj.logo_uri }}" width="20" /></td>
                 <td>{{ obj.chain_id }}</td>
@@ -60,6 +64,20 @@ $(document).ready(function() {
 
         $.post($this.attr("href"), {"field": field}, function(json) {
             if(json[field]) {
+                $this.html(bool_true_html);
+            } else {
+                $this.html(bool_false_html);
+            }
+        }, 'json');
+    })
+
+    $('.get-abi').on('click', function (e) {
+        e.preventDefault();
+
+        let $this = $(this);
+
+        $.post($this.attr("href"), function(json) {
+            if(json.success) {
                 $this.html(bool_true_html);
             } else {
                 $this.html(bool_false_html);

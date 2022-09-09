@@ -50,3 +50,12 @@ class CreateTokenView(HTTPMethodView):
         await token.commit()
 
         return response.redirect(app.url_for("admin.token_list"))
+
+
+async def get_abi_view(request, id):
+    token = await get_object_or_404(Token, id)
+
+    token.abi = await token.get_abi()
+    await token.commit()
+
+    return response.json({"success": bool(token.abi)})

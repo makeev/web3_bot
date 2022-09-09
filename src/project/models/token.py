@@ -1,7 +1,7 @@
 from umongo import Document, fields
 
 from app import get_app
-from project.models import ChainMixin
+from project.models import ChainMixin, ContractAbiMixin
 from utils.common import add_timestamp
 
 app = get_app()
@@ -9,7 +9,7 @@ app = get_app()
 
 @app.ctx.umongo.register
 @add_timestamp
-class Token(ChainMixin, Document):
+class Token(ContractAbiMixin, ChainMixin, Document):
     name = fields.StrField()
     address = fields.StrField()
     symbol = fields.StrField()
@@ -17,6 +17,7 @@ class Token(ChainMixin, Document):
     logo_uri = fields.StrField()
     is_active = fields.BoolField(default=False)
     chain_id = fields.IntField()
+    abi = fields.StrField(allow_none=True)
 
     # основная монета, в которой не стыдно хранить сбережение(WETH, USDC, USDT,...)
     is_base_asset = fields.BoolField(default=False)
