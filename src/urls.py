@@ -32,6 +32,7 @@ admin.add_route(views.delete_contract_view, "/contracts/<id>", methods=["DELETE"
 # tokens
 admin.add_route(views.list_tokens_view, "/tokens", methods=["GET"], name="token_list")
 admin.add_route(views.toggle_token_bool_field_view, "/tokens/<id>/toggle_bool_field", methods=["POST"], name="toggle_token_bool_field")
+admin.add_route(views.CreateTokenView.as_view(), "/tokens/add", methods=["GET", "POST"], name="token_add")
 
 # indexes
 admin.add_route(views.indexes_view, "/indexes", methods=["GET"], name="indexes")
@@ -53,5 +54,6 @@ admin.add_route(views.get_native_balances_view, "/wallets/<id>/native_balances",
 # arb
 admin.add_route(views.ArbView.as_view(), "/arb", methods=["GET"], name="arb")
 admin.add_route(views.calc_arb_path_view, "/arb/calc", methods=["POST"], name="arb_calc")
+admin.add_route(views.simulate_0x_trade_view, "/arb/zx_simulate", methods=["POST"], name="arb_zx_simulate")
 
 app.blueprint(admin)

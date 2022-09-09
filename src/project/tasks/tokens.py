@@ -1,46 +1,10 @@
-import asyncio
-
 import aiohttp
-import pycron
-from functools import wraps, partial
-
 from eth_utils import to_wei
+from marshmallow import ValidationError
 from web3.exceptions import ContractLogicError
 
-from app import get_app
-from project.models import Token, CHAINS, DEXS
-from marshmallow.exceptions import ValidationError
-
-app = get_app()
-app.ctx.cron_tasks = []
-
-
-class CronTask:
-    def __init__(self, to_call, cron_string):
-        self.to_call = to_call
-        self.cron_string = cron_string
-
-    def is_time(self):
-        return pycron.is_now(self.cron_string)
-
-    def run(self):
-        return self.to_call()
-
-    def __str__(self):
-        return '%s' % self.to_call
-
-
-def cronjob(cron_string):
-    def decorator(function):
-        @wraps(function)
-        def wrapper(app):
-            to_call = partial(function, app)
-            return CronTask(to_call, cron_string)
-        # add task to register
-        app.ctx.cron_tasks.append(wrapper)
-        return wrapper
-
-    return decorator
+from project.models import CHAINS, Token, DEXS
+from project.tasks import cronjob, manage_task
 
 
 @cronjob("0 * * * *")
@@ -89,7 +53,7 @@ async def parse_uniswap_tokens(app):
         print('%d tokens added' % counter)
 
 
-@cronjob("0 * * * *")
+@manage_task()
 async def check_tokens_liquidity(app):
     # @TODO слишком простой метод, не учитывает разные сети и биржи
 

@@ -23,9 +23,9 @@
                 {% endwith %}
 
                 <select name="path" class="form-select form-select-sm short-form-control">
-                    <option value="uniswap_v2" selected>UniV2</option>
+                    <option value="zx" selected>0x</option>
+                    <option value="uniswap_v2">UniV2</option>
                     <option value="uniswap_v3">UniV3</option>
-                    <option value="zx">0x</option>
                 </select>
 
                 {% with name="path", chain_id=chain.chain_id, tokens=tokens, selected="DAI" %}
@@ -33,9 +33,9 @@
                 {% endwith %}
 
                 <select name="path" class="form-select form-select-sm short-form-control">
-                    <option value="uniswap_v2" selected>UniV2</option>
+                    <option value="zx" selected>0x</option>
+                    <option value="uniswap_v2">UniV2</option>
                     <option value="uniswap_v3">UniV3</option>
-                    <option value="zx">0x</option>
                 </select>
 
                 {% with name="path", chain_id=chain.chain_id, tokens=tokens, selected="WETH" %}
@@ -45,6 +45,8 @@
                 =
                 <span class="result"></span>
                 <a href="#" title="refresh" class="refresh_btn"><i class="fas fa-sync"></i></a>
+                <a href="#" title="simulate" class="simulate_btn btn btn-sm btn-outline-primary">simulate</a>
+                <span class="simulation_result"></span>
             </div>
         </form>
 
@@ -65,9 +67,9 @@
                 {% endwith %}
 
                 <select name="path" class="form-select form-select-sm short-form-control">
-                    <option value="uniswap_v2" selected>UniV2</option>
+                    <option value="zx" selected>0x</option>
+                    <option value="uniswap_v2">UniV2</option>
                     <option value="uniswap_v3">UniV3</option>
-                    <option value="zx">0x</option>
                 </select>
 
                 {% with name="path", chain_id=chain.chain_id, tokens=tokens, selected="WMATIC" %}
@@ -75,9 +77,9 @@
                 {% endwith %}
 
                 <select name="path" class="form-select form-select-sm short-form-control">
-                    <option value="uniswap_v2" selected>UniV2</option>
+                    <option value="zx" selected>0x</option>
+                    <option value="uniswap_v2">UniV2</option>
                     <option value="uniswap_v3">UniV3</option>
-                    <option value="zx">0x</option>
                 </select>
 
                 {% with name="path", chain_id=chain.chain_id, tokens=tokens, selected="USDC" %}
@@ -87,30 +89,10 @@
                 =
                 <span class="result"></span>
                 <a href="#" title="refresh" class="refresh_btn"><i class="fas fa-sync"></i></a>
+                <a href="#" title="simulate" class="simulate_btn btn btn-sm btn-outline-primary">simulate</a>
+                <span class="simulation_result"></span>
             </div>
         </form>
-    </div>
-
-    <div class="row mt-3">
-        <h4>0x tester</h4>
-        <div class="col-md-3">
-            <label>from</label>
-            <input type="text" class="form-control">
-            <label>to</label>
-            <input type="text" class="form-control">
-        </div>
-
-        <div class="col-md-3">
-            <input type="text" class="form-control">
-        </div>
-
-        <div class="col-md-3">
-            <input type="text" class="form-control">
-        </div>
-
-        <div class="col-md-3">
-            result
-        </div>
     </div>
 
     <script>
@@ -123,6 +105,28 @@
 
                 var $form = $(this).parents('.arb-form');
                 $form.submit();
+            })
+
+            $('.simulate_btn').on('click', function(e) {
+                e.preventDefault();
+
+                let $form = $(this).parents('.arb-form');
+                $form.find('.simulation_result').html(small_spinner_html);
+                let data = $form.serializeArray();
+                let query = '';
+                $.each(data, function(key, value) {
+                    if (value.value.startsWith('0x')) {
+                        query = query + 'path='+value.value+'&';
+                    }
+                })
+                let amount = $('[name=amount]').val();
+                query = query + 'amount='+amount;
+
+                $.post("{{ url_for("admin.arb_zx_simulate") }}", query, function(json) {
+                    $form.find('.simulation_result').html(json.amount);
+                }, 'json').fail(function() {
+                    $form.find('.simulation_result').html('--');
+                })
             })
 
             $(document).on('submit', '.arb-form', function(e) {
