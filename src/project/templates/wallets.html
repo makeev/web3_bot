@@ -13,14 +13,29 @@
                     <th>Name</th>
                     <th>Address</th>
                     <th></th>
+                    <th></th>
                 </tr>
                 {% for obj in objects %}
                     <tr>
                         <td>{{ obj.name }}</td>
                         <td>{{ obj.address }}</td>
                         <td>
-                            <span class="balances"></span>
-                            <a href="{{ url_for("admin.wallets_native_balances", id=obj.id) }}" title="get native balances" class="get_native_balances_btn"><i class="fas fa-sync"></i></a>
+                            <button class="btn btn-outline-primary show-import-form">Import token</button>
+                            <form action="{{ url_for("admin.wallet_import_token", id=obj.id) }}" method="post" style="display: none" class="import-token-form">
+                                <input type="text" name="token" placeholder="address or symbol" class="form-control">
+                                <select name="chain_id" class="form-select mt-1">
+                                    {% for chain_id, chain in chains.items() %}
+                                        <option value="{{ chain_id }}">{{ chain.name }}</option>
+                                    {% endfor %}
+
+                                </select>
+                                <input type="submit" value="Import" class="btn btn-sm btn-outline-primary mt-1">
+                            </form>
+                        </td>
+                        <td>
+                            <span class="balances">{{ obj.balances_html }}</span>
+                            <br>
+                            <a href="{{ url_for("admin.wallets_balances", id=obj.id) }}" title="get native balances" class="get_native_balances_btn"><i class="fas fa-sync"></i></a>
                         </td>
                         <td><a href="{{ url_for("admin.wallets_delete", id=obj.id) }}" class="delete"><i class="fas fa-trash-alt" style="color: red"></i></a></td>
                     </tr>
@@ -57,11 +72,34 @@
             $.getJSON($(this).attr('href'), function(json) {
                 let $html = '';
 
-                $.each(json, function(chain_name, data) {
-                    $html += chain_name+': '+data['amount']+' '+data['symbol']+'<br>';
+                $.each(json, function(chain_name, balances) {
+                    $.each(balances, function(_, data) {
+                        $html += chain_name+': '+data['amount']+' '+data['symbol']+'<br>';
+                    })
                 })
 
                 $balances_html.html($html);
+            })
+        })
+
+        $('.show-import-form').on('click', function(e) {
+            e.preventDefault();
+
+            let $this = $(this);
+            $this.parent().find('form').show();
+            $this.hide();
+        })
+
+        $('.import-token-form').on('submit', function(e) {
+            e.preventDefault();
+
+            let $this = $(this)
+
+            $.post($this.attr('action'), $this.serialize(), function(json) {
+                $this.hide();
+                if (json.success) {
+                    $this.parents('tr').find('.get_native_balances_btn').click();
+                }
             })
         })
     })

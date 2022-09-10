@@ -1,4 +1,5 @@
 from umongo import Document, fields
+from web3 import Web3
 from web3.exceptions import ABIFunctionNotFound
 
 from app import get_app
@@ -71,3 +72,7 @@ class Token(ContractAbiMixin, ChainMixin, Document):
 
         await self.commit()
 
+    def get_balance_for(self, address):
+        # создаем контракт с новым ABI
+        contract = self.get_w3_contract()
+        return contract.functions.balanceOf(Web3.toChecksumAddress(address)).call()

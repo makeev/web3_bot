@@ -16,7 +16,7 @@ class Wallet(Document):
 
     # мы должны знать какие токены у нас храняться, чтобы вернуть баланс
     # т.к. баланс не нативных токенов хранится на контракте токена, а не кошелька
-    tokens = fields.ListField(fields.StrField())
+    tokens = fields.DictField()
     # кешируем балансы, чтобы не дергать ноду каждый раз
     balances = fields.DictField()
 
@@ -35,3 +35,12 @@ class Wallet(Document):
 
         contract = token.get_w3_contract()
         return contract.functions.balanceOf(self.address).call()
+
+    @property
+    def balances_html(self):
+        balances_list = []
+        for chain_name, balances in self.balances.items():
+            for data in balances:
+                balances_list.append("%s: %s %s" % (chain_name, data['amount'], data['symbol']))
+
+        return "<br>".join(balances_list)

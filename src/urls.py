@@ -51,7 +51,8 @@ admin.add_route(views.get_amount_token_to_token_swap_view, "/swap/get_amount", m
 admin.add_route(views.list_wallets_view, "/wallets", methods=["GET"], name="wallets_list")
 admin.add_route(views.WalletCreateView.as_view(), "/wallets/add", methods=["GET", "POST"], name="wallets_add")
 admin.add_route(views.delete_wallet_view, "/wallets/<id>", methods=["DELETE"], name="wallets_delete")
-admin.add_route(views.get_native_balances_view, "/wallets/<id>/native_balances", methods=["GET"], name="wallets_native_balances")
+admin.add_route(views.get_balances_view, "/wallets/<id>/balances", methods=["GET"], name="wallets_balances")
+admin.add_route(views.import_token_view, "/wallets/<id>/import_token", methods=["POST"], name="wallet_import_token")
 
 # arb
 admin.add_route(views.ArbView.as_view(), "/arb", methods=["GET"], name="arb")
