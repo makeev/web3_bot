@@ -34,6 +34,7 @@ admin.add_route(views.list_tokens_view, "/tokens", methods=["GET"], name="token_
 admin.add_route(views.toggle_token_bool_field_view, "/tokens/<id>/toggle_bool_field", methods=["POST"], name="toggle_token_bool_field")
 admin.add_route(views.CreateTokenView.as_view(), "/tokens/add", methods=["GET", "POST"], name="token_add")
 admin.add_route(views.get_abi_view, "/tokens/<id>/get_abi", methods=["POST"], name="token_get_abi")
+admin.add_route(views.delete_token_view, "/tokens/<id>", methods=["DELETE"], name="token_delete")
 
 # indexes
 admin.add_route(views.indexes_view, "/indexes", methods=["GET"], name="indexes")

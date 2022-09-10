@@ -1,4 +1,5 @@
 from umongo import Document, fields
+from web3.exceptions import ABIFunctionNotFound
 
 from app import get_app
 from project.models import ChainMixin, ContractAbiMixin
@@ -50,3 +51,23 @@ class Token(ContractAbiMixin, ChainMixin, Document):
                 cls._CACHE.setdefault(chain_id, {})[address] = token
 
         return token
+
+    async def update_from_contract(self):
+        # обновляем ABI
+        self.abi = await self.get_abi()
+
+        # создаем контракт с новым ABI
+        contract = self.get_w3_contract()
+
+        # получаем данные из контракта
+        try:
+            self.name = contract.functions.name().call()
+            self.symbol = contract.functions.symbol().call()
+            self.decimals = contract.functions.decimals().call()
+            self.is_active = True
+        except ABIFunctionNotFound:
+            # ебаный контракт, помечаем как неактивный
+            self.is_active = False
+
+        await self.commit()
+

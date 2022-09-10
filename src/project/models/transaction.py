@@ -74,7 +74,7 @@ class Transaction(Document):
 
         return value
 
-    async def get_contract(self, w3):
+    async def get_contract(self):
         """
         Вытаскиваем контракт, если у нас есть abi
         """
@@ -85,4 +85,4 @@ class Transaction(Document):
 
         contract = await Contract.get_by_address(self.to)
         if contract:
-            return contract.get_w3_contract(w3)
+            return contract.get_w3_contract()

@@ -63,7 +63,7 @@ async def main(chain_id):
                     chain_id=chain.chain_id
                 )
 
-                contract = await t.get_contract(w3)
+                contract = await t.get_contract()
                 if contract:
                     try:
                         func_obj, func_params = contract.decode_function_input(t.input)

@@ -4,6 +4,7 @@ from web3 import Web3, HTTPProvider
 from web3.middleware import geth_poa_middleware
 
 from app import get_app
+from utils.scan import ScanApi
 
 app = get_app()
 
@@ -29,6 +30,10 @@ class Chain:
                 self._web3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
         return self._web3
+
+    @property
+    def scan_api(self):
+        return ScanApi(api_endpoint=self.scan_api_url, api_key=self.scan_api_key)
 
 
 CHAINS = {

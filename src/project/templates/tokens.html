@@ -21,6 +21,7 @@
                 <th>HasAbi</th>
                 <th>Logo</th>
                 <th>ChainId</th>
+                <th></th>
             </tr>
             {% for obj in objects %}
             <tr>
@@ -42,6 +43,7 @@
                 </td>
                 <td><img src="{{ obj.logo_uri }}" width="20" /></td>
                 <td>{{ obj.chain_id }}</td>
+                <td><a href="{{ url_for("admin.token_delete", id=obj.id) }}" class="delete"><i class="fas fa-trash-alt" style="color: red"></i></a></td>
             </tr>
             {% endfor %}
         </table>
@@ -83,6 +85,21 @@ $(document).ready(function() {
                 $this.html(bool_false_html);
             }
         }, 'json');
+    })
+
+    $('.delete').on('click', function(e) {
+        e.preventDefault();
+
+        if (confirm('Вы уверены?')) {
+            $.ajax({
+                url: $(this).attr('href'),
+                method: "DELETE",
+                contentType: "application/json",
+                success: function(json) {
+                    window.location.reload()
+                }
+            })
+        }
     })
 });
 </script>
