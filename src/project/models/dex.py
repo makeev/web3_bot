@@ -21,7 +21,7 @@ class Dex(ChainMixin):
     def get_uniswap_instance(self, address=None, private_key=None):
         if not self._uniswap_instance:
             self._uniswap_instance = Uniswap(
-                version=self.uniswap_version, web3=self.chain.get_web3_instance(),
+                version=self.uniswap_version, provider=self.chain.node_url,
                 # нам не нужен кошелек, чтобы просто посмотреть цену
                 address=address, private_key=private_key,
                 # uniswap-python не знает адреса в polygon, там это quickswap

@@ -21,7 +21,7 @@ async def main(chain_id):
         raise Exception('chain with id %d not found' % chain_id)
 
     w3 = chain.get_web3_instance()
-    is_connected = w3.isConnected()
+    is_connected = await w3.isConnected()
 
     print('is_connected: %s' % is_connected)
 
@@ -30,7 +30,7 @@ async def main(chain_id):
 
     last_block = None
     while True:
-        pending_block = w3.eth.get_block("pending", full_transactions=True)
+        pending_block = await w3.eth.get_block("pending", full_transactions=True)
         if pending_block['number'] != last_block:
             print('new block %s' % pending_block['number'])
             last_block = pending_block['number']
@@ -78,7 +78,7 @@ async def main(chain_id):
                 print('new transaction {explorer_url}/tx/{hash}'.format(explorer_url=chain.explorer_url, hash=t.hash))
         else:
             # @TODO поставить 1s когда будет более дорогая нода
-            time.sleep(5)
+            await asyncio.sleep(5)
 
 
 if __name__ == '__main__':

@@ -39,6 +39,7 @@ class ZeroXProtocol(aiohttp.ClientSession):
 
     async def quote(self, **kwargs):
         method = 'quote'
+        print('%s?%s' % (self._url(method), urlencode(kwargs)))
         return await self.get(
             self._url(method),
             params=kwargs

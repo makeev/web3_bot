@@ -49,9 +49,6 @@ async def get_amount_token_to_token_swap_view(
 
     amount = to_basis_points(amount, token_from.decimals)
 
-    chain = CHAINS[chain_id]
-    w3 = chain.get_web3_instance()
-
     dex = DEXS[chain_id][dex]
     client = dex.get_uniswap_instance()
 

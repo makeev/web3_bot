@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 
-from web3 import Web3, HTTPProvider
-from web3.middleware import geth_poa_middleware
+from web3 import Web3, HTTPProvider, AsyncHTTPProvider
+from web3.eth import AsyncEth
+from web3.middleware import geth_poa_middleware, async_geth_poa_middleware
+from web3.net import AsyncNet
 
 from app import get_app
 from utils.scan import ScanApi
@@ -25,9 +27,19 @@ class Chain:
 
     def get_web3_instance(self):
         if not self._web3:
-            self._web3 = Web3(HTTPProvider(self.node_url))
+            self._web3 = Web3(
+                AsyncHTTPProvider(self.node_url),
+                modules={'eth': (AsyncEth,), 'net': (AsyncNet,)},
+                middlewares=[]
+            )
             if self.is_poa:
-                self._web3.middleware_onion.inject(geth_poa_middleware, layer=0)
+                self._web3.middleware_onion.inject(async_geth_poa_middleware, layer=0)
+            blocked_w3 = Web3(HTTPProvider(self.node_url))
+            blocked_w3.middleware_onion.inject(geth_poa_middleware, layer=0)
+
+            # account и contract еще не реализован в async версии
+            self._web3.eth.account = blocked_w3.eth.account
+            self._web3.eth.contract = blocked_w3.eth.contract
 
         return self._web3
 
