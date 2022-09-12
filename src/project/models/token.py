@@ -53,6 +53,22 @@ class Token(ContractAbiMixin, ChainMixin, Document):
 
         return token
 
+    @classmethod
+    async def get_by_symbol_n_chain(cls, symbol, chain_id):
+        chain_id = int(chain_id)
+        token = cls._CACHE.get(chain_id, {}).get(symbol)
+
+        if not token:
+            token = await cls.find_one({
+                "symbol": symbol,
+                "chain_id": chain_id
+            })
+
+            if token:
+                cls._CACHE.setdefault(chain_id, {})[symbol] = token
+
+        return token
+
     async def update_from_contract(self):
         # обновляем ABI
         self.abi = await self.get_abi()

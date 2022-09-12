@@ -4,6 +4,7 @@ from uniswap import Uniswap
 
 from app import get_app
 from project.models import ChainMixin
+from project.models.token import Token
 from utils.zerox import ZeroXProtocol
 
 app = get_app()
@@ -31,16 +32,22 @@ class Dex(ChainMixin):
 
         return self._uniswap_instance
 
-    @staticmethod
-    def token_to_address(token):
+    async def token_to_address(self, token):
+        # token obj
         if hasattr(token, 'address'):
             return token.address
 
-        return str(token)
+        # address
+        if token.startswith('0x'):
+            return str(token)
+
+        # symbol
+        token = await Token.get_by_symbol_n_chain(token, self.chain_id)
+        return token.address
 
     async def get_price_input(self, token_from, token_to, amount_bpt: int) -> int:
-        token_from = self.token_to_address(token_from)
-        token_to = self.token_to_address(token_to)
+        token_from = await self.token_to_address(token_from)
+        token_to = await self.token_to_address(token_to)
 
         if self.uniswap_version:
             # uniswap like dex

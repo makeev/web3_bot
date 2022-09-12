@@ -1,9 +1,10 @@
 from eth_utils import to_checksum_address
+from hexbytes import HexBytes
 
 from project.models import Wallet, CHAINS
 
 
-async def zx_swap_token_to_token(wallet: Wallet, quote):
+async def zx_swap_token_to_token(wallet: Wallet, quote) -> HexBytes:
     """
     Меняем токен через 0x protocol
     :quote: - то что приходит от метода /quote api 0x protocol

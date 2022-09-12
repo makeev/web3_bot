@@ -5,3 +5,4 @@ from .chain import *
 from .dex import *
 from .token import *
 from .wallet import *
+from .deal import *

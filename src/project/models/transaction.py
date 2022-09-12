@@ -134,13 +134,19 @@ class Transaction(ChainMixin, Document):
 
         if decode_cotnract_input:
             # ищем контракт, если нет в базе пытаемся вытащить через api(force_create=True)
-            w3_contract = await t.get_w3_contract(force_create=True)
-            if w3_contract:
-                try:
-                    func_obj, func_params = w3_contract.decode_function_input(t.input)
-                    t.contract_function = func_obj.fn_name
-                    t.contract_params = myjson.dumps(func_params)
-                except ValueError as e:
-                    print("can't decode input data" % e)
+            await t.decode_contract_input()
 
         return t
+
+    async def decode_contract_input(self):
+        """
+        Смотрим какой метод контракта был вызван и с какими параметрами
+        """
+        w3_contract = await self.get_w3_contract(force_create=True)
+        if w3_contract:
+            try:
+                func_obj, func_params = w3_contract.decode_function_input(self.input)
+                self.contract_function = func_obj.fn_name
+                self.contract_params = myjson.dumps(func_params)
+            except ValueError as e:
+                print("can't decode input data" % e)
