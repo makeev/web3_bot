@@ -1,7 +1,7 @@
 import json
 from typing import Optional
 
-import aiohttp
+import web3
 from umongo import Document, fields
 from web3 import Web3
 from web3.exceptions import ABIFunctionNotFound
@@ -51,22 +51,23 @@ simplified_abi = json.dumps([
 
 
 class ContractAbiMixin:
-    async def get_abi(self) -> Optional[str]:
+    async def get_abi(self, default=simplified_abi) -> Optional[str]:
         """
         Достает abi контракта через api, если контракт верифицирован.
-        Или возвращает упрощенный контракт
+        Или возвращает упрощенный контракт(simplified_abi подходит только для ERC20 контрактов),
+        для всяких там роутеров и прокси надо указывать default=None
         @TODO эту вермишель надо переписать
         """
         async with self.chain.scan_api as api:
             data = await api.call("contract", "getsourcecode", address=self.address)
             if data['message'] != 'OK':
-                return simplified_abi
+                return default
 
             if data['result'][0]['Proxy'] == '1':
                 # это прокси контракт, надо искать имплементацию
                 data = await api.call("contract", "getabi", address=data['result'][0]['Implementation'])
                 if data['message'] != 'OK':
-                    return simplified_abi
+                    return default
 
                 return data['result']
 
@@ -80,7 +81,7 @@ class ContractAbiMixin:
                     abi=abi
                 )
             except ValueError:
-                return simplified_abi
+                return default
 
             try:
                 contract.functions.symbol().call()
@@ -92,14 +93,15 @@ class ContractAbiMixin:
                     assert data['message'] == 'OK'
                     return data['result']
                 except:
-                    return simplified_abi
+                    return default
             else:
                 # все ок
                 return abi
 
-    def get_w3_contract(self):
-        w3 = self.chain.get_web3_instance()
-        return w3.eth.contract(address=Web3.toChecksumAddress(self.address), abi=self.abi)
+    def get_w3_contract(self) -> Optional[web3.eth.Contract]:
+        if self.abi:
+            w3 = self.chain.get_web3_instance()
+            return w3.eth.contract(address=Web3.toChecksumAddress(self.address), abi=self.abi)
 
 
 @app.ctx.umongo.register
@@ -116,12 +118,13 @@ class Contract(ContractAbiMixin, ChainMixin, Document):
         ]
 
     @classmethod
-    async def get_by_address(cls, address):
-        contract = _CONTRACTS_CACHE.get(address)
+    async def get_by_address(cls, address, chain_id):
+        key = '%d_%s' % (chain_id, address)
+        contract = _CONTRACTS_CACHE.get(key)
 
         if not contract:
-            contract = await cls.find_one({"address": address})
+            contract = await cls.find_one({"address": address, "chain_id": chain_id})
             if contract:
-                _CONTRACTS_CACHE[address] = contract
+                _CONTRACTS_CACHE[key] = contract
 
         return contract

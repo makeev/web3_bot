@@ -50,12 +50,12 @@
                     {% for obj in objects %}
                         <tr>
                             <td class="text-truncate">
-                                Tx: <a href="https://polygonscan.com/tx/{{ obj.hash }}" target="_blank">{{ obj.hash }}</a>
+                                Tx: <a href="{{ obj.chain.explorer_url }}/tx/{{ obj.hash }}" target="_blank">{{ obj.hash }}</a>
                                 <br>
-                                From: <a href="https://etherscan.io/address/{{ obj.from_ }}"
+                                From: <a href="{{ obj.chain.explorer_url }}/address/{{ obj.from_ }}"
                                          target="_blank">{{ known_addresses.get(obj.from_, obj.from_) }}</a>
                                 <br>
-                                To: <a href="https://etherscan.io/address/{{ obj.to }}"
+                                To: <a href="{{ obj.chain.explorer_url }}/address/{{ obj.to }}"
                                        target="_blank">{{ known_addresses.get(obj.to, obj.to) }}</a>
                             </td>
                             <td>{{ obj.gas }}</td>
@@ -66,7 +66,7 @@
                                 <code><pre>{{ obj.pretty_params(known_addresses) }}</pre></code>
                             </td>
                             <td>{{ obj.created_at.strftime("%H:%M:%S") }}</td>
-                            <td><a href="https://etherscan.io/block/{{ obj.block_number }}"
+                            <td><a href="{{ obj.chain.explorer_url }}/block/{{ obj.block_number }}"
                                    target="_blank">{{ obj.block_number }}</a></td>
                             <td>{{ obj.chain_id }}</td>
                             <td></td>

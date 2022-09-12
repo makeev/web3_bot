@@ -44,35 +44,7 @@ async def main(chain_id):
                 if transaction_exists:
                     continue
 
-                t = Transaction(
-                    block_hash=transaction['blockHash'].hex(),
-                    block_number=transaction['blockNumber'],
-                    hash=transaction['hash'].hex(),
-                    from_=transaction['from'],
-                    to=transaction['to'],
-                    input=transaction['input'],
-                    gas=transaction['gas'],
-                    gas_price=str(transaction['gasPrice']),
-                    nonce=str(transaction['nonce']),
-                    value=str(transaction['value']),
-                    value_decimal=Decimal(Decimal(transaction['value'])/10**18),
-                    type=transaction['type'],
-                    v=transaction['v'],
-                    r=transaction['r'].hex(),
-                    s=transaction['s'].hex(),
-                    chain_id=chain.chain_id
-                )
-
-                contract = await t.get_contract()
-                if contract:
-                    try:
-                        func_obj, func_params = contract.decode_function_input(t.input)
-                        t.contract_function = func_obj.fn_name
-                        print(func_params)
-                        t.contract_params = myjson.dumps(func_params)
-                    except ValueError as e:
-                        print('something wrong with contract %s' % e)
-
+                t = await Transaction.from_tx_dict(transaction, chain_id, decode_cotnract_input=True)
                 await t.commit()
 
                 print('new transaction {explorer_url}/tx/{hash}'.format(explorer_url=chain.explorer_url, hash=t.hash))
