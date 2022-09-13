@@ -59,4 +59,7 @@ admin.add_route(views.ArbView.as_view(), "/arb", methods=["GET"], name="arb")
 admin.add_route(views.calc_arb_path_view, "/arb/calc", methods=["POST"], name="arb_calc")
 admin.add_route(views.simulate_0x_trade_view, "/arb/zx_simulate", methods=["POST"], name="arb_zx_simulate")
 
+# deals
+admin.add_route(views.deals_list_view, "/deals", methods=["GET"], name="deal_list")
+
 app.blueprint(admin)

@@ -8,3 +8,4 @@ from .indexes import *
 from .swap import *
 from .wallets import *
 from .arb import *
+from .deals import *

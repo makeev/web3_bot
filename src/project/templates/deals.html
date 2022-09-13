@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Deals</h1>
+    </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table">
+                    <tr>
+                        <th>Tx</th>
+                        <th>Chain</th>
+                        <th>Type</th>
+                        <th>Sell Token</th>
+                        <th>Buy Token</th>
+                        <th>Sell Amount</th>
+                        <th>Buy Amount</th>
+                        <th>TxFee</th>
+                        <th>Profit</th>
+                        <th>Dt</th>
+                    </tr>
+                    {% for obj in objects %}
+                        <tr>
+                            <td class="text-truncate"><a href="{{ obj.chain.explorer_url }}/tx/{{ obj.tx_hash }}" target="_blank">{{ obj.tx_hash }}</a></td>
+                            <td>{{ obj.chain.name }}</td>
+                            <td>{{ obj.type }}</td>
+                            <td>{{ obj.sell_token._document.symbol }}</td>
+                            <td>{{ obj.buy_token._document.symbol }}</td>
+                            <td>{{ obj.sell_amount }}</td>
+                            <td>{{ obj.buy_amount }}</td>
+                            <td>{{ obj.tx_fee_usd }}</td>
+                            <td>{{ obj.profit_usd }}</td>
+                            <td class="text-nowrap">{{ obj.created_at.strftime("%Y-%m-%d% H:%M:%S") }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                {% include "_pagination.html" %}
+            </div>
+        </div>
+{% endblock %}
