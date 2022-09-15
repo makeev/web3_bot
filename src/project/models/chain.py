@@ -32,10 +32,11 @@ class Chain:
                 modules={'eth': (AsyncEth,), 'net': (AsyncNet,)},
                 middlewares=[]
             )
+            blocked_w3 = Web3(HTTPProvider(self.node_url))
+
             if self.is_poa:
                 self._web3.middleware_onion.inject(async_geth_poa_middleware, layer=0)
-            blocked_w3 = Web3(HTTPProvider(self.node_url))
-            blocked_w3.middleware_onion.inject(geth_poa_middleware, layer=0)
+                blocked_w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
             # account и contract еще не реализован в async версии
             self._web3.eth.account = blocked_w3.eth.account

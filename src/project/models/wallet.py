@@ -63,18 +63,18 @@ class Wallet(Document):
         # разрешаем тратить сразу максимально возможное количество,
         # не безопасно, зато удобно, не надо каждый раз вызывать approve перед обменом
         max_amount = Web3.toWei(2**64 - 1, 'ether')
-        nonce = w3.eth.getTransactionCount(self.address)
+        nonce = await w3.eth.get_transaction_count(self.address)
 
-        tx = contract.functions.approve(spender, max_amount).buildTransaction({
+        tx = contract.functions.approve(spender, max_amount).build_transaction({
             'from': self.address,
             'nonce': nonce
         })
 
-        signed_tx = w3.eth.account.signTransaction(tx, self.private_key)
-        tx_hash = w3.eth.sendRawTransaction(signed_tx.rawTransaction)
+        signed_tx = w3.eth.account.sign_transaction(tx, self.private_key)
+        tx_hash = await w3.eth.send_raw_transaction(signed_tx.rawTransaction)
 
         # ждем пока все пройдет успешно
-        return w3.eth.wait_for_transaction_receipt(tx_hash)
+        return await w3.eth.wait_for_transaction_receipt(tx_hash)
 
     async def approve_if_needed(self, token: Token, spender_address, chain_id: int):
         if not self.approved_addresses:
@@ -84,7 +84,7 @@ class Wallet(Document):
         self.approved_addresses.setdefault(str(chain_id), {})
         self.approved_addresses[str(chain_id)].setdefault(token.symbol, [])
 
-        if spender_address not in self.approved_addresses[str(chain_id)]:
+        if spender_address not in self.approved_addresses[str(chain_id)][token.symbol]:
             # апрувим
             await self.approve(token, spender_address, chain_id)
 

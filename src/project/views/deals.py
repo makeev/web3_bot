@@ -1,9 +1,7 @@
 from math import ceil
 
 from app import jinja, get_app
-
-from project.models import Transaction, Contract, Token, CHAINS, Deal
-from utils.crud import get_pagination_context_for
+from project.models import Deal
 
 app = get_app()
 
@@ -17,7 +15,7 @@ async def deals_list_view(request):
     total = await Deal.count_documents()
     limit = 100
     pages = range(1, ceil(total / limit) + 1)
-    sort =[("$natural", -1)]
+    sort = [("$natural", -1)]
 
     cursor = Deal.find({}).limit(limit).skip((page - 1) * limit).sort(sort)
     objects = []

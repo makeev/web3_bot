@@ -30,7 +30,11 @@
                             <td>{{ obj.sell_amount }}</td>
                             <td>{{ obj.buy_amount }}</td>
                             <td>{{ obj.tx_fee_usd }}</td>
-                            <td>{{ obj.profit_usd }}</td>
+                            <td>
+                                <span style="color: {{ 'green' if obj.total_profit_usd > 0 else 'red' }}">
+                                {{ obj.total_profit_usd }}
+                                </span>
+                            </td>
                             <td class="text-nowrap">{{ obj.created_at.strftime("%Y-%m-%d% H:%M:%S") }}</td>
                         </tr>
                     {% endfor %}

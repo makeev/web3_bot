@@ -52,7 +52,7 @@ class Dex(ChainMixin):
         if self.uniswap_version:
             # uniswap like dex
             client = self.get_uniswap_instance()
-            return client.get_price_input(token_from, token_to, amount_bpt)
+            return client.get_price_input(token_from, token_to, amount_bpt, fee=3000)
 
         if self.name.startswith('0x'):  # 0x protocol
             async with ZeroXProtocol() as zx:

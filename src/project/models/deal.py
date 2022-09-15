@@ -30,7 +30,7 @@ class Deal(ChainMixin, Document):
 
     @property
     def total_profit_usd(self):
-        return Decimal(self.profit_usd) - Decimal(self.gas_usd)
+        return Decimal(self.profit_usd)
 
     @classmethod
     async def get_or_create_from_transaction(cls, type: str, tx_hash: str, chain_id: int, save=False):
